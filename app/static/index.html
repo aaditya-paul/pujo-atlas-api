@@ -1,1538 +1,660 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>West Bengal & Kolkata Durga Puja Pandal Explorer</title>
-  <meta name="description" content="Statewide multi-source catalog of Durga Puja pandals in West Bengal: cross-referencing popular mega-themes, quiet neighborhood paras, and centuries-old bonedi baris.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-  <style>
-    /* ==========================================================================
-       1. DESIGN SYSTEM & TOKENS (Anti-Slop / Quiet Luxury Heritage Palette)
-       ========================================================================== */
-    :root {
-      --bg-canvas: #090a0f;
-      --bg-surface: #11131a;
-      --bg-surface-elevated: #161922;
-      --bg-surface-hover: #1e222f;
-      --bg-input: #0d0f15;
-
-      --border-hairline: rgba(255, 255, 255, 0.07);
-      --border-subtle: rgba(255, 255, 255, 0.12);
-      --border-active: rgba(225, 29, 72, 0.45);
-
-      /* Semantic Accents */
-      --accent-crimson: #e11d48;       /* Traditional Alta Crimson */
-      --accent-crimson-subtle: rgba(225, 29, 72, 0.14);
-      --accent-amber: #d97706;         /* Marigold Amber */
-      --accent-amber-subtle: rgba(217, 119, 6, 0.14);
-      --accent-gold: #f59e0b;          /* Brass / Dhunuchi Gold */
-      --accent-emerald: #10b981;       /* Verified Consensus */
-      --accent-emerald-subtle: rgba(16, 185, 129, 0.14);
-      --accent-cyan: #06b6d4;          /* Quiet Para Samiti */
-      --accent-cyan-subtle: rgba(6, 182, 212, 0.14);
-
-      /* Typography & Text */
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --text-highlight: #fef08a;
-
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      --font-display: 'Cinzel', serif;
-      --font-mono: 'JetBrains Mono', monospace;
-
-      --radius-sm: 6px;
-      --radius-md: 10px;
-      --radius-lg: 14px;
-      --radius-xl: 20px;
-
-      --shadow-surface: 0 4px 20px rgba(0, 0, 0, 0.35);
-      --shadow-elevated: 0 12px 36px rgba(0, 0, 0, 0.5);
-      --shadow-glow: 0 0 24px rgba(225, 29, 72, 0.25);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    body {
-      font-family: var(--font-sans);
-      background-color: var(--bg-canvas);
-      color: var(--text-primary);
-      min-height: 100vh;
-      line-height: 1.5;
-      padding-bottom: 80px;
-      overflow-x: hidden;
-    }
-
-    /* Subtle Architectural Heritage Grid */
-    body::before {
-      content: "";
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.08) 0%, transparent 60%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 48px 48px, 48px 48px;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .app-wrapper {
-      position: relative;
-      z-index: 1;
-    }
-
-    .container {
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-
-    /* ==========================================================================
-       2. HEADER & NAVIGATION
-       ========================================================================== */
-    header {
-      border-bottom: 1px solid var(--border-hairline);
-      background: rgba(9, 10, 15, 0.85);
-      backdrop-filter: blur(12px);
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      transition: border-color 0.2s;
-    }
-
-    .nav-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 0;
-      gap: 16px;
-    }
-
-    .brand-mark {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .brand-icon {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, var(--accent-crimson), #9f1239);
-      border-radius: var(--radius-md);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .brand-text h2 {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      letter-spacing: 0.02em;
-      color: var(--text-primary);
-      font-weight: 700;
-    }
-
-    .brand-text p {
-      font-size: 0.72rem;
-      color: var(--text-secondary);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      font-weight: 600;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    /* Buttons */
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 9px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 0.86rem;
-      font-weight: 600;
-      cursor: pointer;
-      border: 1px solid transparent;
-      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
-      text-decoration: none;
-      white-space: nowrap;
-      user-select: none;
-    }
-    .btn:active {
-      transform: scale(0.98);
-    }
-    .btn:focus-visible {
-      outline: 2px solid var(--accent-crimson);
-      outline-offset: 2px;
-    }
-
-    .btn-primary {
-      background: var(--accent-crimson);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
-    }
-    .btn-primary:hover {
-      background: #f43f5e;
-      box-shadow: 0 4px 16px rgba(225, 29, 72, 0.55);
-    }
-    .btn-primary:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    .btn-secondary {
-      background: var(--bg-surface-elevated);
-      color: var(--text-primary);
-      border: 1px solid var(--border-subtle);
-    }
-    .btn-secondary:hover {
-      background: var(--bg-surface-hover);
-      border-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid transparent;
-    }
-    .btn-ghost:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.05);
-    }
-
-    /* ==========================================================================
-       3. HERO SECTION (Cultural Dignity & Editorial Clarity)
-       ========================================================================== */
-    .hero-section {
-      padding: 48px 0 28px;
-      text-align: center;
-      position: relative;
-    }
-
-    .hero-tag {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 14px;
-      border-radius: 999px;
-      background: var(--accent-crimson-subtle);
-      border: 1px solid rgba(225, 29, 72, 0.3);
-      color: #fda4af;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 18px;
-    }
-
-    .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(2rem, 4vw, 3.25rem);
-      font-weight: 800;
-      line-height: 1.15;
-      letter-spacing: -0.01em;
-      color: #fff;
-      max-width: 900px;
-      margin: 0 auto 16px;
-    }
-
-    .hero-title span {
-      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #e11d48 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-desc {
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      max-width: 740px;
-      margin: 0 auto;
-      line-height: 1.6;
-    }
-
-    /* ==========================================================================
-       4. BENTO KPI METRICS ROW
-       ========================================================================== */
-    .metrics-bento {
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 14px;
-      margin: 32px 0 28px;
-    }
-
-    .metric-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 18px 20px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.2s ease;
-      position: relative;
-      overflow: hidden;
-    }
-    .metric-card:hover {
-      border-color: var(--border-subtle);
-      background: var(--bg-surface-elevated);
-      transform: translateY(-2px);
-    }
-
-    .metric-card.hero-kpi {
-      grid-column: span 4;
-      background: linear-gradient(145deg, rgba(225, 29, 72, 0.12) 0%, rgba(17, 19, 26, 0.95) 100%);
-      border-color: rgba(225, 29, 72, 0.25);
-    }
-    .metric-card.reg-kpi {
-      grid-column: span 2;
-    }
-
-    @media (max-width: 1024px) {
-      .metric-card.hero-kpi { grid-column: span 12; }
-      .metric-card.reg-kpi { grid-column: span 3; }
-    }
-    @media (max-width: 768px) {
-      .metric-card.reg-kpi { grid-column: span 6; }
-    }
-
-    .metric-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .metric-label {
-      font-size: 0.76rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-secondary);
-    }
-
-    .metric-icon-wrap {
-      width: 28px;
-      height: 28px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .metric-value {
-      font-size: 2.1rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      font-variant-numeric: tabular-nums;
-      line-height: 1.1;
-      margin-bottom: 6px;
-    }
-
-    .metric-subtext {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .bar-meter {
-      width: 100%;
-      height: 6px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 999px;
-      margin-top: 10px;
-      overflow: hidden;
-      display: flex;
-    }
-    .bar-meter-fill {
-      height: 100%;
-      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    /* ==========================================================================
-       5. UNIFIED PAGE-LEVEL CONTROL BAR
-       ========================================================================== */
-    .control-deck {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 16px 20px;
-      margin-bottom: 24px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      box-shadow: var(--shadow-surface);
-    }
-
-    .search-filter-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .search-wrapper {
-      flex: 1;
-      min-width: 280px;
-      position: relative;
-    }
-
-    .search-icon {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: var(--text-muted);
-      pointer-events: none;
-    }
-
-    .search-input {
-      width: 100%;
-      background: var(--bg-input);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 11px 40px 11px 42px;
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 0.92rem;
-      outline: none;
-      transition: all 0.18s;
-    }
-    .search-input:focus {
-      border-color: var(--accent-crimson);
-      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
-      background: #0f1118;
-    }
-    .search-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .search-shortcut {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      font-size: 0.72rem;
-      font-family: var(--font-mono);
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      padding: 2px 6px;
-      border-radius: 4px;
-      pointer-events: none;
-    }
-
-    .select-wrap {
-      position: relative;
-      min-width: 190px;
-    }
-
-    .custom-select {
-      width: 100%;
-      appearance: none;
-      background: var(--bg-input);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 11px 36px 11px 14px;
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 0.88rem;
-      outline: none;
-      cursor: pointer;
-      transition: border-color 0.18s;
-    }
-    .custom-select:focus {
-      border-color: var(--accent-crimson);
-      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
-    }
-
-    .select-arrow {
-      position: absolute;
-      right: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      pointer-events: none;
-      color: var(--text-muted);
-    }
-
-    /* Filter Segment Tabs */
-    .filter-segment-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 14px;
-    }
-
-    .pill-tabs {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-    }
-
-    .pill-btn {
-      background: transparent;
-      border: 1px solid var(--border-hairline);
-      color: var(--text-secondary);
-      padding: 7px 14px;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: all 0.15s ease;
-    }
-    .pill-btn:hover {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-primary);
-    }
-    .pill-btn.active {
-      background: var(--accent-crimson);
-      border-color: var(--accent-crimson);
-      color: #fff;
-      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.35);
-    }
-    .pill-btn.active .pill-count {
-      background: rgba(0, 0, 0, 0.25);
-      color: #fff;
-    }
-
-    .pill-count {
-      font-size: 0.72rem;
-      padding: 1px 6px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-    }
-
-    .deck-stats {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    /* ==========================================================================
-       6. PANDAL CARDS GRID & CARD DESIGN
-       ========================================================================== */
-    .results-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-      font-size: 0.86rem;
-      color: var(--text-secondary);
-    }
-
-    .pandals-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
-      gap: 18px;
-    }
-
-    @media (max-width: 480px) {
-      .pandals-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .pandal-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      position: relative;
-      cursor: pointer;
-    }
-    .pandal-card:hover {
-      background: var(--bg-surface-elevated);
-      border-color: var(--border-subtle);
-      transform: translateY(-3px);
-      box-shadow: var(--shadow-elevated);
-    }
-
-    .card-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .card-tags {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .tag {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 3px 8px;
-      border-radius: 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-    .tag-popular {
-      background: var(--accent-crimson-subtle);
-      color: #fda4af;
-      border: 1px solid rgba(225, 29, 72, 0.35);
-    }
-    .tag-unpopular {
-      background: var(--accent-cyan-subtle);
-      color: #67e8f9;
-      border: 1px solid rgba(6, 182, 212, 0.35);
-    }
-    .tag-bonedi {
-      background: var(--accent-amber-subtle);
-      color: #fcd34d;
-      border: 1px solid rgba(217, 119, 6, 0.35);
-    }
-    .tag-cross {
-      background: var(--accent-emerald-subtle);
-      color: #6ee7b7;
-      border: 1px solid rgba(16, 185, 129, 0.35);
-    }
-    .tag-district {
-      background: rgba(255, 255, 255, 0.06);
-      color: #cbd5e1;
-    }
-
-    .card-score-badge {
-      display: flex;
-      align-items: baseline;
-      gap: 2px;
-      font-family: var(--font-mono);
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--accent-gold);
-      background: rgba(245, 158, 11, 0.1);
-      border: 1px solid rgba(245, 158, 11, 0.25);
-      padding: 3px 8px;
-      border-radius: var(--radius-sm);
-    }
-    .card-score-badge span {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-    }
-
-    .card-title {
-      font-size: 1.18rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 10px;
-      line-height: 1.35;
-    }
-
-    .card-meta-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      margin-bottom: 14px;
-    }
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .meta-item svg {
-      flex-shrink: 0;
-      color: var(--text-muted);
-    }
-
-    .card-desc {
-      font-size: 0.88rem;
-      color: #94a3b8;
-      line-height: 1.55;
-      margin-bottom: 18px;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .card-footer {
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 14px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-    }
-
-    .source-avatars {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.74rem;
-      color: var(--text-muted);
-    }
-
-    .action-links {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .btn-card-map {
-      color: #38bdf8;
-      text-decoration: none;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      transition: color 0.15s;
-    }
-    .btn-card-map:hover {
-      color: #7dd3fc;
-      text-decoration: underline;
-    }
-
-    /* Skeleton Loading Cards */
-    .skeleton-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-lg);
-      padding: 22px;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .skeleton-box {
-      background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
-      background-size: 200% 100%;
-      animation: skeleton-pulse 1.5s infinite;
-      border-radius: 4px;
-    }
-    @keyframes skeleton-pulse {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-
-    /* Empty state */
-    .empty-state {
-      grid-column: 1 / -1;
-      text-align: center;
-      padding: 80px 20px;
-      color: var(--text-muted);
-    }
-    .empty-state-icon {
-      width: 48px;
-      height: 48px;
-      margin: 0 auto 16px;
-      color: var(--text-muted);
-      opacity: 0.5;
-    }
-
-    /* ==========================================================================
-       7. DETAIL MODAL & CRAWLER LOGS DRAWER
-       ========================================================================== */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(6px);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 100;
-      padding: 20px;
-    }
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-card {
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-xl);
-      max-width: 680px;
-      width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      box-shadow: var(--shadow-elevated);
-      position: relative;
-      padding: 32px;
-      animation: modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    @keyframes modal-enter {
-      from { opacity: 0; transform: scale(0.96) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 20px; right: 20px;
-      background: rgba(255, 255, 255, 0.08);
-      border: none;
-      color: var(--text-secondary);
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-    .modal-close:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-    }
-
-    .modal-title {
-      font-family: var(--font-display);
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 12px;
-      color: #fff;
-      line-height: 1.3;
-    }
-
-    .modal-badge-row {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      margin-bottom: 20px;
-    }
-
-    .modal-section {
-      margin-bottom: 20px;
-    }
-    .modal-section-title {
-      font-size: 0.76rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-    }
-
-    .modal-info-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 12px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-hairline);
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-    }
-    @media (max-width: 500px) {
-      .modal-info-grid { grid-template-columns: 1fr; }
-    }
-
-    .modal-info-item {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .modal-info-k {
-      font-size: 0.74rem;
-      color: var(--text-muted);
-    }
-    .modal-info-v {
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-
-    .sources-chips {
-      display: flex;
-      gap: 6px;
-      flex-wrap: wrap;
-      margin-top: 6px;
-    }
-    .source-chip {
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid var(--border-hairline);
-      padding: 3px 8px;
-      border-radius: 4px;
-      font-size: 0.75rem;
-      font-family: var(--font-mono);
-      color: #cbd5e1;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-      border-top: 1px solid var(--border-hairline);
-      padding-top: 20px;
-    }
-
-    /* Live Toast */
-    .toast-container {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .toast {
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      border-radius: var(--radius-md);
-      padding: 12px 18px;
-      box-shadow: var(--shadow-elevated);
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.88rem;
-      animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-      max-width: 400px;
-    }
-    @keyframes toast-in {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pujo Atlas — পুজো অ্যাটলাস</title>
+<meta name="description" content="A quiet, minimal guide to Durga Puja pandals across Kolkata and West Bengal. Popular themes, para samitis, and bonedi baris.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 48'%3E%3Ccircle cx='24' cy='24' r='22' fill='%23C1272D' stroke='%23D9A441' stroke-width='1.6'/%3E%3Ccircle cx='24' cy='24' r='18.6' fill='none' stroke='%23F6C453' stroke-width='1' stroke-dasharray='1.5 3'/%3E%3Cpath d='M24 5.5c2.6 3.2 4.2 5 4.2 7.4a4.2 4.2 0 0 1-8.4 0C19.8 10.5 21.4 8.7 24 5.5z' fill='%23F6C453'/%3E%3Cpath d='M24 9.2c1.4 1.8 2.3 2.9 2.3 4.1a2.3 2.3 0 0 1-4.6 0c0-1.2.9-2.3 2.3-4.1z' fill='%23FFF7E8'/%3E%3Ctext x='24' y='35' text-anchor='middle' font-family='serif' font-size='17' fill='%23FFF7E8'%3E%E0%A6%A6%E0%A7%81%3C/text%3E%3Cpath d='M15 37.5h18c-.8 2-4 3.2-9 3.2s-8.2-1.2-9-3.2z' fill='%23D9A441'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tiro+Bangla:ital@0;1&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* Lal-Paar Minimal — Sharodiya Paper. Two fonts, one accent, lots of air. */
+  :root{
+    --paper:#FBF7EE;
+    --card:#FFFFFF;
+    --ink:#221A15;
+    --soft:#6F645C;
+    --faint:#A89C90;
+    --line:#EADFCB;
+    --line-soft:#F1E8D6;
+    --alta:#C1272D;
+    --alta-deep:#8F1D22;
+    --alta-tint:#FBE9E7;
+    --holud:#B45309;
+    --holud-tint:#FEF3E2;
+    --leaf:#15803D;
+    --leaf-tint:#E7F4EC;
+    --pond:#0E7490;
+    --pond-tint:#E6F5F9;
+    --radius:18px;
+    --radius-s:10px;
+    --shadow:0 1px 2px rgba(60,40,20,.06),0 8px 28px rgba(60,40,20,.07);
+    --ease:cubic-bezier(.23,1,.32,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Inter',system-ui,-apple-system,sans-serif;
+    background:var(--paper);color:var(--ink);
+    min-height:100vh;line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* lal-paar saree border */
+  .paar{height:6px;background:var(--alta);position:sticky;top:0;z-index:60}
+  .paar::after{content:"";display:block;height:2px;margin-top:6px;background:#D9A441;opacity:.7}
+  ::selection{background:var(--alta);color:#FFF7E8}
+
+  .wrap{max-width:1060px;margin:0 auto;padding:0 22px}
+  .serif{font-family:'Tiro Bangla',Georgia,serif}
+
+  /* header */
+  header.site{
+    position:sticky;top:8px;z-index:50;
+    background:rgba(251,247,238,.88);backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0}
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:inherit;background:none;border:none;cursor:pointer;text-align:left}
+  .seal{
+    width:46px;height:46px;flex:none;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:transparent;border:none;padding:0;
+    filter:drop-shadow(0 2px 6px rgba(143,29,34,.35));
+    transition:transform 140ms var(--ease);
+  }
+  .seal svg{display:block;width:46px;height:46px;border-radius:50%;background:#fff;border:2px solid #fff;outline:2px solid #D9A441}
+  .brand:hover .seal{transform:rotate(-6deg) scale(1.03)}
+  .seal.beating{animation:beat .5s var(--ease) 3}
+  @keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.12) rotate(-4deg)}60%{transform:scale(.96)}}
+  .brand h1{font-family:'Tiro Bangla',serif;font-size:1.25rem;font-weight:400;letter-spacing:.01em}
+  .brand h1 .en{font-family:'Inter',sans-serif;font-size:.72rem;display:block;color:var(--soft);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+  .nav-actions{display:flex;gap:10px;align-items:center}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.86rem;font-weight:600;font-family:inherit;
+    padding:9px 16px;border-radius:999px;border:1px solid transparent;
+    cursor:pointer;text-decoration:none;white-space:nowrap;
+    transition:background 140ms var(--ease),transform 80ms var(--ease),border-color 140ms var(--ease),box-shadow 140ms var(--ease);
+  }
+  .btn:active{transform:scale(.97)}
+  .btn:focus-visible{outline:2px solid var(--alta);outline-offset:2px}
+  .btn-primary{background:var(--alta);color:#FFF7E8}
+  .btn-primary:hover{background:var(--alta-deep)}
+  .btn-primary:disabled{opacity:.55;cursor:wait;transform:none}
+  .btn-ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+  .btn-ghost:hover{background:#fff;border-color:#D8C9AE}
+
+  /* hero — small, calm, centred */
+  .hero{text-align:center;padding:44px 0 10px}
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:.78rem;font-weight:600;color:var(--alta-deep);
+    background:#fff;border:1px solid var(--line);border-radius:999px;
+    padding:5px 14px;margin-bottom:16px;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--alta)}
+  .hero h2{font-family:'Tiro Bangla',serif;font-weight:400;font-size:clamp(2rem,4.6vw,3rem);line-height:1.22;letter-spacing:-.01em}
+  .hero h2 .bn{display:block}
+  .hero p{color:var(--soft);font-size:.99rem;max-width:62ch;margin:12px auto 0}
+  .hero .hint{font-size:.8rem;color:var(--faint);margin-top:10px}
+  .hero .hint kbd{font-family:inherit;background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:6px;padding:0 6px;font-size:.75rem}
+
+  /* alpana divider */
+  .alpana{height:16px;margin:26px auto 6px;max-width:420px;
+    background-image:radial-gradient(circle,var(--alta) 1.5px,transparent 1.6px);
+    background-size:20px 16px;background-repeat:repeat-x;background-position:center;
+    opacity:.28}
+  .alpana-label{text-align:center;font-family:'Tiro Bangla',serif;color:var(--alta-deep);font-size:.9rem;opacity:.8}
+
+  /* stats strip — one quiet row */
+  .strip{
+    display:flex;justify-content:center;gap:0;flex-wrap:wrap;
+    margin:22px 0 18px;background:var(--card);
+    border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;
+  }
+  .stat{flex:1 1 140px;min-width:130px;text-align:center;padding:16px 10px;position:relative}
+  .stat+.stat::before{content:"";position:absolute;left:0;top:22%;height:56%;width:1px;background:var(--line-soft)}
+  .stat b{display:block;font-size:1.6rem;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+  .stat span{font-size:.76rem;color:var(--soft);font-weight:500}
+  .stat span.bn{font-family:'Tiro Bangla',serif;font-size:.85rem;color:var(--faint);display:block;margin-top:1px}
+  .meter{height:3px;background:var(--line-soft);display:flex}
+  .meter i{display:block;height:100%;transition:width .6s var(--ease)}
+
+  /* controls */
+  .controls{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:8px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .search{flex:1 1 260px;position:relative}
+  .search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--faint)}
+  .search input{
+    width:100%;font:inherit;font-size:.9rem;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:11px 44px 11px 38px;outline:none;transition:border-color 140ms,box-shadow 140ms,background 140ms;
+  }
+  .search input:focus{border-color:var(--alta);box-shadow:0 0 0 3px rgba(193,39,45,.12);background:#fff}
+  .search kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:.7rem;font-family:inherit;color:var(--faint);background:#fff;border:1px solid var(--line);border-radius:6px;padding:1px 7px}
+  label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .sel{position:relative;flex:0 1 200px;min-width:170px}
+  .sel select{
+    width:100%;appearance:none;font:inherit;font-size:.86rem;color:var(--ink);
+    background:var(--paper);border:1px solid var(--line);border-radius:12px;
+    padding:11px 34px 11px 13px;outline:none;cursor:pointer;
+  }
+  .sel select:focus{border-color:var(--alta);box-shadow:0 0 0 3px rgba(193,39,45,.12);background:#fff}
+  .sel svg{position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--faint)}
+  .pills{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;padding-top:12px;border-top:1px dashed var(--line);align-items:center}
+  .pill{
+    font:inherit;font-size:.82rem;font-weight:600;color:var(--soft);
+    background:transparent;border:1px solid var(--line);border-radius:999px;
+    padding:7px 13px;cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+    transition:all 140ms var(--ease);
+  }
+  .pill:hover{background:#fff;color:var(--ink);border-color:#D8C9AE}
+  .pill:focus-visible{outline:2px solid var(--alta);outline-offset:2px}
+  .pill.active{background:var(--ink);border-color:var(--ink);color:#FFF7E8}
+  .pill.active.soft{background:var(--alta);border-color:var(--alta);color:#fff}
+  .pill .n{font-size:.7rem;font-weight:700;background:rgba(127,112,100,.14);border-radius:999px;padding:0 7px;font-variant-numeric:tabular-nums}
+  .pill.active .n{background:rgba(255,255,255,.25)}
+  .countline{margin-left:auto;font-size:.8rem;color:var(--faint);font-variant-numeric:tabular-nums}
+
+  /* cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;margin:18px 0 8px}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px;display:flex;flex-direction:column;gap:10px;cursor:pointer;
+    transition:transform 160ms var(--ease),box-shadow 160ms var(--ease),border-color 160ms;
+  }
+  .card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#D8C9AE}
+  .card:focus-visible{outline:2px solid var(--alta);outline-offset:2px}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .tag{font-size:.68rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 9px;border-radius:999px;border:1px solid transparent}
+  .t-pop{background:var(--alta-tint);color:var(--alta-deep);border-color:#F3C6C3}
+  .t-para{background:var(--pond-tint);color:var(--pond);border-color:#BFE3EC}
+  .t-bonedi{background:var(--holud-tint);color:var(--holud);border-color:#F0D9B5}
+  .t-verified{background:var(--leaf-tint);color:var(--leaf);border-color:#BFE6CC}
+  .t-dist{background:transparent;color:var(--faint);border-color:var(--line)}
+  .score{margin-left:auto;font-size:.8rem;font-weight:700;color:var(--holud);font-variant-numeric:tabular-nums}
+  .card h3{font-family:'Tiro Bangla',serif;font-weight:400;font-size:1.22rem;line-height:1.35}
+  .card .where{font-size:.82rem;color:var(--soft);display:flex;flex-direction:column;gap:3px}
+  .card .where b{font-weight:600;color:var(--ink)}
+  .card p.desc{font-size:.87rem;color:var(--soft);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .card .foot{border-top:1px dashed var(--line);padding-top:10px;margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:.78rem;color:var(--faint)}
+  .card .foot .bn-note{font-family:'Tiro Bangla',serif;opacity:0;transition:opacity 140ms}
+  .card:hover .foot .bn-note{opacity:1}
+  .map{color:var(--alta-deep);font-weight:600;text-decoration:none}
+  .map:hover{text-decoration:underline}
+
+  .skeleton{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;gap:12px}
+  .sk{background:linear-gradient(90deg,#F1E8D6 25%,#FAF4E6 50%,#F1E8D6 75%);background-size:200% 100%;animation:sh 1.3s infinite;border-radius:6px}
+  @keyframes sh{to{background-position:-200% 0}}
+  .empty{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--soft);background:var(--card);border:1px dashed var(--line);border-radius:var(--radius)}
+  .empty .serif{font-size:1.6rem;color:var(--ink);display:block;margin-bottom:6px}
+
+  /* footer */
+  footer{margin:34px 0 40px;text-align:center;color:var(--soft);font-size:.84rem}
+  footer .bridge{opacity:.5;margin:0 auto 10px;display:block}
+  footer button.proverb{font-family:'Tiro Bangla',serif;font-size:1.02rem;color:var(--alta-deep);background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:999px}
+  footer button.proverb:hover{background:#fff}
+  footer .tiny{font-size:.72rem;color:var(--faint);margin-top:8px}
+  footer a{color:var(--alta-deep)}
+
+  /* modal */
+  .overlay{position:fixed;inset:0;background:rgba(34,26,21,.45);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100;padding:18px}
+  .overlay.active{display:flex}
+  .modal{background:#FFFDF7;border:1px solid var(--line);border-radius:22px;max-width:620px;width:100%;max-height:88vh;overflow:auto;padding:30px;position:relative;box-shadow:0 24px 70px rgba(60,30,20,.25);animation:up 200ms var(--ease)}
+  @keyframes up{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  .x{position:absolute;top:16px;right:16px;width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:#fff;color:var(--soft);cursor:pointer;font-size:1rem;line-height:1}
+  .x:hover{color:var(--ink);border-color:#D8C9AE}
+  .x:focus-visible{outline:2px solid var(--alta);outline-offset:2px}
+  .modal h2{font-family:'Tiro Bangla',serif;font-weight:400;font-size:1.6rem;line-height:1.3;margin:10px 0 8px;padding-right:36px}
+  .modal .lede{color:var(--soft);font-size:.93rem}
+  .msec{margin-top:18px}
+  .msec h4{font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);margin-bottom:8px}
+  .minfo{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:var(--paper);border:1px solid var(--line-soft);border-radius:14px;padding:14px}
+  @media(max-width:520px){.minfo{grid-template-columns:1fr}}
+  .minfo div span{display:block;font-size:.72rem;color:var(--faint)}
+  .minfo div b{font-size:.88rem;font-weight:600}
+  .minfo div b.mono{font-family:ui-monospace,monospace;font-size:.78rem;font-weight:500}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{background:#fff;border:1px solid var(--line);border-radius:8px;padding:3px 9px;font-size:.75rem;color:var(--soft);font-family:ui-monospace,monospace}
+  .tip{margin-top:14px;background:var(--holud-tint);border:1px solid #F0D9B5;border-radius:12px;padding:10px 14px;font-size:.84rem;color:#7C4A12}
+  .tip .serif{font-size:.95rem}
+  .mactions{display:flex;gap:10px;margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);flex-wrap:wrap}
+
+  .toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;width:min(440px,92vw)}
+  .toast{background:var(--ink);color:#FFF7E8;border-radius:999px;padding:10px 18px;font-size:.85rem;box-shadow:0 10px 30px rgba(0,0,0,.25);animation:up 200ms var(--ease);text-align:center}
+  .toast .serif{font-size:.95rem}
+
+  /* petals */
+  .petal{position:fixed;top:-20px;z-index:300;pointer-events:none;border-radius:60% 40% 60% 40%;animation:fall linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(340deg);opacity:.9}}
+
+  @media(max-width:640px){
+    .nav-actions .btn-ghost{display:none}
+    .stat{flex:1 1 45%}
+    .stat:nth-child(3)::before{display:none}
+    .hero{padding-top:30px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+    html{scroll-behavior:auto}
+  }
+</style>
 </head>
 <body>
+<div class="paar" aria-hidden="true"></div>
 
-  <div class="app-wrapper">
-    <!-- 1. Header Navigation -->
-    <header>
-      <div class="container nav-bar">
-        <a href="/" class="brand-mark">
-          <div class="brand-icon">
-            <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          </div>
-          <div class="brand-text">
-            <h2>Pujo Atlas</h2>
-            <p>West Bengal Durga Puja Registry</p>
-          </div>
-        </a>
+<header class="site">
+  <div class="wrap nav">
+    <button class="brand" id="brandSeal" aria-label="Pujo Atlas home — psst, click me a few times">
+      <span class="seal" id="sealMark" title="প্রদীপের আলোয় পুজো অ্যাটলাস">
+        <svg viewBox="0 0 48 48" width="46" height="46" role="img" aria-label="Pujo Atlas — pradip seal">
+          <defs>
+            <radialGradient id="altaG" cx="35%" cy="28%" r="80%">
+              <stop offset="0%" stop-color="#E0323C"/>
+              <stop offset="100%" stop-color="#8F1D22"/>
+            </radialGradient>
+          </defs>
+          <circle cx="24" cy="24" r="22" fill="url(#altaG)" stroke="#D9A441" stroke-width="1.6"/>
+          <circle cx="24" cy="24" r="18.6" fill="none" stroke="#F6C453" stroke-width="1" stroke-dasharray="1.5 3" opacity=".95"/>
+          <g fill="#FFF7E8" opacity=".95">
+            <circle cx="24" cy="5.6" r="1"/>
+            <circle cx="42.4" cy="24" r="1"/>
+            <circle cx="24" cy="42.4" r="1"/>
+            <circle cx="5.6" cy="24" r="1"/>
+          </g>
+          <path d="M24 5.5c2.6 3.2 4.2 5 4.2 7.4a4.2 4.2 0 0 1-8.4 0C19.8 10.5 21.4 8.7 24 5.5z" fill="#F6C453"/>
+          <path d="M24 9.2c1.4 1.8 2.3 2.9 2.3 4.1a2.3 2.3 0 0 1-4.6 0c0-1.2.9-2.3 2.3-4.1z" fill="#FFF7E8"/>
+          <text x="24" y="35" text-anchor="middle" font-family="Tiro Bangla, Georgia, serif" font-size="17" fill="#FFF7E8">দু</text>
+          <path d="M15 37.5h18c-.8 2-4 3.2-9 3.2s-8.2-1.2-9-3.2z" fill="#D9A441"/>
+          <ellipse cx="24" cy="37.5" rx="9" ry="1.4" fill="#8F1D22" opacity=".55"/>
+        </svg>
+      </span>
+      <h1>পুজো অ্যাটলাস<span class="en">Pujo Atlas · Kolkata · West Bengal</span></h1>
+    </button>
+    <nav class="nav-actions" aria-label="Primary">
+      <a class="btn btn-ghost" href="/docs" target="_blank" rel="noopener">API Docs</a>
+      <button id="crawlBtn" class="btn btn-primary" onclick="triggerCrawl()">Refresh pujo data</button>
+    </nav>
+  </div>
+</header>
 
-        <div class="nav-actions">
-          <button id="crawlBtn" class="btn btn-primary" onclick="triggerCrawl()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Trigger Crawler
-          </button>
-          <a href="/docs" target="_blank" class="btn btn-secondary">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
-            API Docs
-          </a>
-        </div>
+<main class="wrap">
+  <section class="hero">
+    <span class="eyebrow"><span class="dot"></span><span id="greeting">শারদীয়া শুভেচ্ছা</span><span class="dot"></span></span>
+    <h2><span class="bn">এবার পুজোয়, পাড়ায় পাড়ায় হারিয়ে যান।</span></h2>
+    <p>A minimal registry of Durga Puja — famous mega-themes, quiet para samitis, and centuries-old bonedi baris — across Kolkata and 17 districts. No noise, just thakur, dhaak, and adda.</p>
+    <p class="hint">Press <kbd>/</kbd> to search · psst — try <em>dhaak</em>, <em>kashful</em>, <em>bijoya</em>, <em>dhunuchi</em></p>
+  </section>
+
+  <div class="alpana" aria-hidden="true"></div>
+  <p class="alpana-label serif">॥ শান্তি ॥ শ্রদ্ধা ॥ আনন্দ ॥</p>
+
+  <section class="strip" aria-label="Pandal statistics">
+    <div class="stat"><b id="kpiTotal">–</b><span>Total pandals</span><span class="bn">মোট প্যান্ডেল</span></div>
+    <div class="stat"><b id="kpiPopular" style="color:var(--alta)">–</b><span>Crowd-pullers</span><span class="bn">জনপ্রিয়</span></div>
+    <div class="stat"><b id="kpiUnpopular" style="color:var(--pond)">–</b><span>Quiet paras</span><span class="bn">পাড়ার পুজো</span></div>
+    <div class="stat"><b id="kpiBonedi" style="color:var(--holud)">–</b><span>Bonedi baris</span><span class="bn">বনেদি বাড়ি</span></div>
+    <div class="stat"><b id="kpiCross" style="color:var(--leaf)">–</b><span>Cross-verified</span><span class="bn">যাচাইকৃত</span></div>
+  </section>
+  <div class="meter" aria-hidden="true"><i id="meterPopular" style="background:var(--alta);width:50%"></i><i id="meterUnpopular" style="background:var(--pond);width:50%"></i></div>
+
+  <section class="controls" aria-label="Search and filter">
+    <div class="row">
+      <div class="search">
+        <label class="sr" for="searchInput">Search pandals</label>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input id="searchInput" type="text" placeholder="Search name, para, metro… e.g. Bagbazar, tram, Kalyani" oninput="debounceSearch()" autocomplete="off">
+        <kbd>/</kbd>
       </div>
-    </header>
-
-    <main class="container">
-      <!-- 2. Hero Section -->
-      <section class="hero-section">
-        <div class="hero-tag">
-          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2"/></svg>
-          Autonomous Statewide Ingestion &bull; 24h Scheduler Active
-        </div>
-        <h1 class="hero-title">
-          Explore Durga Puja Across <span>All 17 Districts</span>
-        </h1>
-        <p class="hero-desc">
-          A multi-source data catalog cross-referencing Wikipedia, open geo-spatial catalogs, Reddit communities, and transit guides. Cataloging iconic high-budget themes, quiet residential neighborhood pujas, and centuries-old royal ancestral baris.
-        </p>
-      </section>
-
-      <!-- 3. Bento KPI Bar -->
-      <section class="metrics-bento">
-        <!-- Main Total Card -->
-        <div class="metric-card hero-kpi">
-          <div class="metric-header">
-            <span class="metric-label">Total Verified Pandals</span>
-            <div class="metric-icon-wrap" style="background: rgba(225, 29, 72, 0.2); color: #fda4af;">
-              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
-            </div>
-          </div>
-          <div class="metric-value" id="kpiTotal">-</div>
-          <div class="metric-subtext">Across 17 West Bengal districts & Kolkata zones</div>
-          <div class="bar-meter">
-            <div id="meterPopular" class="bar-meter-fill" style="width: 58%; background: var(--accent-crimson);" title="Popular"></div>
-            <div id="meterUnpopular" class="bar-meter-fill" style="width: 42%; background: var(--accent-cyan);" title="Unpopular"></div>
-          </div>
-        </div>
-
-        <!-- Popular Card -->
-        <div class="metric-card reg-kpi">
-          <div class="metric-header">
-            <span class="metric-label">Popular Themes</span>
-            <div class="metric-icon-wrap" style="background: var(--accent-crimson-subtle); color: #fda4af;">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z"/></svg>
-            </div>
-          </div>
-          <div class="metric-value" id="kpiPopular" style="color: #fda4af;">-</div>
-          <div class="metric-subtext">Crowd-pullers & landmarks</div>
-        </div>
-
-        <!-- Unpopular Card -->
-        <div class="metric-card reg-kpi">
-          <div class="metric-header">
-            <span class="metric-label">Para / Quiet</span>
-            <div class="metric-icon-wrap" style="background: var(--accent-cyan-subtle); color: #67e8f9;">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-            </div>
-          </div>
-          <div class="metric-value" id="kpiUnpopular" style="color: #67e8f9;">-</div>
-          <div class="metric-subtext">Quiet community samitis</div>
-        </div>
-
-        <!-- Bonedi Card -->
-        <div class="metric-card reg-kpi">
-          <div class="metric-header">
-            <span class="metric-label">Bonedi Baris</span>
-            <div class="metric-icon-wrap" style="background: var(--accent-amber-subtle); color: #fcd34d;">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            </div>
-          </div>
-          <div class="metric-value" id="kpiBonedi" style="color: #fcd34d;">-</div>
-          <div class="metric-subtext">Centuries-old royal estates</div>
-        </div>
-
-        <!-- Cross-referenced Card -->
-        <div class="metric-card reg-kpi">
-          <div class="metric-header">
-            <span class="metric-label">Cross-Verified</span>
-            <div class="metric-icon-wrap" style="background: var(--accent-emerald-subtle); color: #6ee7b7;">
-              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-            </div>
-          </div>
-          <div class="metric-value" id="kpiCross" style="color: #6ee7b7;">-</div>
-          <div class="metric-subtext">&ge; 2 sources consensus</div>
-        </div>
-      </section>
-
-      <!-- 4. Unified Control Deck -->
-      <section class="control-deck">
-        <div class="search-filter-row">
-          <!-- Live Search Bar -->
-          <div class="search-wrapper">
-            <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            <input type="text" id="searchInput" class="search-input" placeholder="Search pandals by name, locality, transit hub, or keyword..." oninput="debounceSearch()">
-            <span class="search-shortcut">/</span>
-          </div>
-
-          <!-- District Selector -->
-          <div class="select-wrap">
-            <select id="districtSelect" class="custom-select" onchange="fetchPandals()">
-              <option value="">All Districts (Statewide)</option>
-              <option value="Kolkata">Kolkata</option>
-              <option value="Nadia">Nadia (Kalyani / Krishnanagar)</option>
-              <option value="Hooghly">Hooghly (Chandannagar / Guptipara)</option>
-              <option value="North 24 Parganas">North 24 Parganas (Barasat)</option>
-              <option value="South 24 Parganas">South 24 Parganas</option>
-              <option value="Paschim Bardhaman">Paschim Bardhaman (Durgapur/Asansol)</option>
-              <option value="Purba Bardhaman">Purba Bardhaman (Kalna)</option>
-              <option value="Darjeeling">Darjeeling / Siliguri</option>
-              <option value="Cooch Behar">Cooch Behar</option>
-              <option value="Bankura">Bankura (Bishnupur)</option>
-              <option value="Birbhum">Birbhum (Bolpur / Santiniketan)</option>
-              <option value="Murshidabad">Murshidabad (Hazarduari)</option>
-              <option value="Purba Medinipur">Purba Medinipur</option>
-              <option value="Paschim Medinipur">Paschim Medinipur</option>
-              <option value="Malda">Malda</option>
-              <option value="Purulia">Purulia</option>
-            </select>
-            <svg class="select-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-          </div>
-
-          <!-- Zone / Region Selector -->
-          <div class="select-wrap">
-            <select id="zoneSelect" class="custom-select" onchange="fetchPandals()">
-              <option value="">All Zones & Regions</option>
-              <option value="North">North Kolkata</option>
-              <option value="South">South Kolkata</option>
-              <option value="Central">Central Kolkata</option>
-              <option value="Salt Lake">East Kolkata & Salt Lake</option>
-              <option value="Behala">Behala</option>
-              <option value="North Bengal">North Bengal Region</option>
-              <option value="South Bengal">South Bengal Region</option>
-              <option value="Rarh Bengal">Rarh Bengal Region</option>
-              <option value="Howrah">Howrah</option>
-            </select>
-            <svg class="select-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-          </div>
-        </div>
-
-        <!-- Pill Filter Segments -->
-        <div class="filter-segment-row">
-          <div class="pill-tabs">
-            <button class="pill-btn active" data-filter="" onclick="setPopularityFilter('', this)">
-              All Pandals
-              <span class="pill-count" id="pillCountAll">-</span>
-            </button>
-            <button class="pill-btn" data-filter="popular" onclick="setPopularityFilter('popular', this)">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z"/></svg>
-              Popular Themes
-              <span class="pill-count" id="pillCountPop">-</span>
-            </button>
-            <button class="pill-btn" data-filter="unpopular" onclick="setPopularityFilter('unpopular', this)">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-              Quiet Para Samitis
-              <span class="pill-count" id="pillCountUnpop">-</span>
-            </button>
-            <button class="pill-btn" data-toggle="bonedi" onclick="toggleBonediFilter(this)">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
-              Bonedi Baris
-            </button>
-            <button class="pill-btn" data-toggle="cross" onclick="toggleCrossFilter(this)">
-              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-              2+ Sources Corroborated
-            </button>
-          </div>
-
-          <div class="deck-stats">
-            <span id="renderedCountLabel">Showing 0 pandals</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- 5. Pandals Cards Grid -->
-      <section id="pandalsGrid" class="pandals-grid">
-        <!-- Rendered by JS or Skeletons on initial load -->
-      </section>
-    </main>
-
-    <!-- 6. Detail Modal -->
-    <div id="detailModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
-      <div class="modal-card">
-        <button class="modal-close" onclick="closeModal()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
-        </button>
-        <div id="modalBadges" class="modal-badge-row"></div>
-        <h2 id="modalTitle" class="modal-title">Pandal Title</h2>
-        <div class="modal-section">
-          <p id="modalDesc" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;"></p>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-title">Telemetry & Location</div>
-          <div id="modalInfoGrid" class="modal-info-grid"></div>
-        </div>
-        <div class="modal-section">
-          <div class="modal-section-title">Crawler Provenance & Corroboration</div>
-          <div id="modalSources" class="sources-chips"></div>
-        </div>
-        <div class="modal-actions">
-          <a id="modalMapBtn" href="#" target="_blank" class="btn btn-primary" style="display: none;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            Open in Google Maps
-          </a>
-          <button class="btn btn-secondary" onclick="copyPandalJson()">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
-            Copy Pandal ID / API URL
-          </button>
-        </div>
+      <div class="sel">
+        <label class="sr" for="districtSelect">District</label>
+        <select id="districtSelect" onchange="fetchPandals()">
+          <option value="">All districts</option>
+          <option value="Kolkata">Kolkata</option>
+          <option value="Nadia">Nadia</option>
+          <option value="Hooghly">Hooghly</option>
+          <option value="North 24 Parganas">North 24 Parganas</option>
+          <option value="South 24 Parganas">South 24 Parganas</option>
+          <option value="Paschim Bardhaman">Paschim Bardhaman</option>
+          <option value="Purba Bardhaman">Purba Bardhaman</option>
+          <option value="Darjeeling">Darjeeling</option>
+          <option value="Cooch Behar">Cooch Behar</option>
+          <option value="Bankura">Bankura</option>
+          <option value="Birbhum">Birbhum</option>
+          <option value="Murshidabad">Murshidabad</option>
+          <option value="Purba Medinipur">Purba Medinipur</option>
+          <option value="Paschim Medinipur">Paschim Medinipur</option>
+          <option value="Malda">Malda</option>
+          <option value="Purulia">Purulia</option>
+        </select>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+      </div>
+      <div class="sel">
+        <label class="sr" for="zoneSelect">Zone</label>
+        <select id="zoneSelect" onchange="fetchPandals()">
+          <option value="">All zones</option>
+          <option value="North">North Kolkata</option>
+          <option value="South">South Kolkata</option>
+          <option value="Central">Central</option>
+          <option value="Salt Lake">Salt Lake</option>
+          <option value="Behala">Behala</option>
+          <option value="Howrah">Howrah</option>
+          <option value="North Bengal">North Bengal</option>
+          <option value="South Bengal">South Bengal</option>
+          <option value="Rarh Bengal">Rarh Bengal</option>
+        </select>
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
       </div>
     </div>
+    <div class="pills">
+      <button class="pill active" data-filter="" onclick="setPopularityFilter('', this)">All <span class="n" id="pillCountAll">–</span></button>
+      <button class="pill" data-filter="popular" onclick="setPopularityFilter('popular', this)">Popular <span class="n" id="pillCountPop">–</span></button>
+      <button class="pill" data-filter="unpopular" onclick="setPopularityFilter('unpopular', this)">Quiet para <span class="n" id="pillCountUnpop">–</span></button>
+      <button class="pill" data-toggle="bonedi" onclick="toggleBonediFilter(this)">Bonedi bari</button>
+      <button class="pill" data-toggle="cross" onclick="toggleCrossFilter(this)">Verified 2+ sources</button>
+      <span class="countline" id="renderedCountLabel">Loading pandals…</span>
+    </div>
+  </section>
 
-    <!-- 7. Toast Container -->
-    <div id="toastContainer" class="toast-container"></div>
+  <section id="pandalsGrid" class="grid" aria-live="polite"></section>
+
+  <footer>
+    <svg class="bridge" width="220" height="34" viewBox="0 0 220 34" fill="none" stroke="#C1272D" stroke-width="1.4" aria-hidden="true">
+      <path d="M4 28 Q 60 4 110 28 T 216 28" opacity=".8"/>
+      <path d="M4 28 V31 M40 20 V31 M75 14 V31 M110 13 V31 M145 14 V31 M180 20 V31 M216 28 V31" opacity=".6"/>
+      <path d="M4 31 H216" />
+      <circle cx="110" cy="8" r="2.4" fill="#C1272D" stroke="none"/>
+    </svg>
+    <button class="proverb" id="proverbBtn" title="click for another">আসছে বছর আবার হবে →</button>
+    <p>Made with adda in Kolkata · <a href="/docs">API</a> · <a href="/stats">stats</a></p>
+    <p class="tiny">Easters hidden like shiuli in grass: tap the প্রদীপ seal 5 times · search “dhaak”, “kashful”, “shiuli”, “mahalaya”, “ashtami”, “bijoya”, “dhunuchi”, “bhog”, “kumartuli”, “bhalobasa” · click the proverb · every API response carries শারদীয়া শুভেচ্ছা too.</p>
+  </footer>
+</main>
+
+<div id="detailModal" class="overlay" onclick="closeModalOnOverlay(event)" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal">
+    <button class="x" onclick="closeModal()" aria-label="Close">×</button>
+    <div id="modalBadges" class="tags"></div>
+    <h2 id="modalTitle">Pandal</h2>
+    <p id="modalDesc" class="lede"></p>
+    <div class="msec"><h4>Location & details</h4><div id="modalInfoGrid" class="minfo"></div></div>
+    <div class="msec"><h4>Sources & citations</h4><div id="modalSources" class="chips"></div></div>
+    <div class="tip" id="modalTip"></div>
+    <div class="mactions">
+      <a id="modalMapBtn" href="#" target="_blank" rel="noopener" class="btn btn-primary" style="display:none">Open in Maps</a>
+      <button class="btn btn-ghost" onclick="copyPandalJson()">Copy API link</button>
+    </div>
   </div>
+</div>
 
-  <script>
-    /* ==========================================================================
-       CLIENT LOGIC & DATA SYNCHRONIZATION
-       ========================================================================== */
-    let currentPopularity = "";
-    let isBonediOnly = false;
-    let isCrossOnly = false;
-    let searchTimeout = null;
-    let activeModalPandal = null;
+<div id="toastContainer" class="toasts" aria-live="polite"></div>
 
-    // Toast Notification helper
-    function showToast(message, type = "info") {
-      const container = document.getElementById('toastContainer');
-      const toast = document.createElement('div');
-      toast.className = 'toast';
-      
-      const iconSvg = type === 'success' 
-        ? '<svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'
-        : '<svg width="16" height="16" fill="none" stroke="#38bdf8" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
-      
-      toast.innerHTML = `${iconSvg} <span>${message}</span>`;
-      container.appendChild(toast);
-      setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transform = 'translateY(8px)';
-        toast.style.transition = 'all 0.25s ease';
-        setTimeout(() => toast.remove(), 250);
-      }, 4000);
+<script>
+let currentPopularity="", isBonediOnly=false, isCrossOnly=false, searchTimeout=null, activeModalPandal=null;
+
+/* ---------- toasts ---------- */
+function showToast(html){
+  const c=document.getElementById('toastContainer');
+  const t=document.createElement('div'); t.className='toast'; t.innerHTML=html;
+  c.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .25s';setTimeout(()=>t.remove(),260)},3600);
+}
+
+/* ---------- keyboard ---------- */
+window.addEventListener('keydown',e=>{
+  if(e.key==='/' && !/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName)){e.preventDefault();document.getElementById('searchInput').focus();}
+  if(e.key==='Escape')closeModal();
+});
+
+/* ---------- greeting ---------- */
+(function(){
+  const m=new Date().getMonth()+1, d=new Date().getDate();
+  const g=document.getElementById('greeting');
+  if(m===10&&(d>=9&&d<=13))g.textContent='শুভ সপ্তমী · অষ্টমী · নবমী';
+  else if(m===10)g.textContent='শারদীয়া শুভেচ্ছা';
+  else if(m===9)g.textContent='মহালয়ার শুভেচ্ছা — পুজো আসছে';
+  else g.textContent='শারদীয়া শুভেচ্ছা';
+})();
+
+/* ---------- stats ---------- */
+async function loadStats(){
+  try{
+    const r=await fetch('/stats'); const d=await r.json();
+    set('kpiTotal',d.total_pandals); set('kpiPopular',d.popular_pandals);
+    set('kpiUnpopular',d.unpopular_pandals); set('kpiBonedi',d.bonedi_pandals);
+    set('kpiCross',d.cross_referenced_pandals||0);
+    set('pillCountAll',d.total_pandals); set('pillCountPop',d.popular_pandals); set('pillCountUnpop',d.unpopular_pandals);
+    if(d.total_pandals>0){
+      const p=Math.round(d.popular_pandals/d.total_pandals*100);
+      document.getElementById('meterPopular').style.width=p+'%';
+      document.getElementById('meterUnpopular').style.width=(100-p)+'%';
     }
+  }catch(e){console.error(e)}
+}
+function set(id,v){document.getElementById(id).textContent=v;}
 
-    // Keyboard shortcut to search
-    window.addEventListener('keydown', (e) => {
-      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT') {
-        e.preventDefault();
-        const searchInput = document.getElementById('searchInput');
-        searchInput.focus();
-        searchInput.select();
-      }
-      if (e.key === 'Escape') {
-        closeModal();
-      }
-    });
+/* ---------- grid ---------- */
+function renderSkeletons(){
+  document.getElementById('pandalsGrid').innerHTML=Array(6).fill(0).map(()=>
+    `<div class="skeleton"><div class="sk" style="height:18px;width:45%"></div><div class="sk" style="height:22px;width:80%"></div><div class="sk" style="height:44px"></div><div class="sk" style="height:12px;width:35%"></div></div>`).join('');
+}
 
-    async function loadStats() {
-      try {
-        const res = await fetch('/stats');
-        const data = await res.json();
-        
-        document.getElementById('kpiTotal').innerText = data.total_pandals;
-        document.getElementById('kpiPopular').innerText = data.popular_pandals;
-        document.getElementById('kpiUnpopular').innerText = data.unpopular_pandals;
-        document.getElementById('kpiBonedi').innerText = data.bonedi_pandals;
-        document.getElementById('kpiCross').innerText = data.cross_referenced_pandals || 0;
+const BN_POP=['ভিড় হবে, মন ভরবে','ঢাকের তালে এগিয়ে যান','আলোয় ভাসা থিম','ভোরে যান, ভিড় কম','বলো দুগ্গা মাঈ কী — জয়!'];
+const BN_PARA=['ফাঁকায় ঠাকুর দেখুন','পাড়ার আড্ডায় বসুন','ধুনোর গন্ধে জিরিয়ে নিন','শিউলির গন্ধে ভোরের অঞ্জলি','মিষ্টিমুখ করতে ভুলবেন না'];
 
-        document.getElementById('pillCountAll').innerText = data.total_pandals;
-        document.getElementById('pillCountPop').innerText = data.popular_pandals;
-        document.getElementById('pillCountUnpop').innerText = data.unpopular_pandals;
-
-        // Ratio Meter
-        if (data.total_pandals > 0) {
-          const popPct = Math.round((data.popular_pandals / data.total_pandals) * 100);
-          const unpopPct = 100 - popPct;
-          document.getElementById('meterPopular').style.width = popPct + '%';
-          document.getElementById('meterUnpopular').style.width = unpopPct + '%';
-        }
-      } catch (e) {
-        console.error("Error loading stats:", e);
-      }
+async function fetchPandals(){
+  renderSkeletons();
+  checkEasters(document.getElementById('searchInput').value.trim());
+  const district=document.getElementById('districtSelect').value;
+  const zone=document.getElementById('zoneSelect').value;
+  const search=document.getElementById('searchInput').value.trim();
+  const p=new URLSearchParams();
+  if(currentPopularity)p.append('popularity',currentPopularity);
+  if(district)p.append('district',district);
+  if(zone)p.append('zone',zone);
+  if(isBonediOnly)p.append('bonedi','true');
+  if(isCrossOnly)p.append('cross_referenced','true');
+  if(search && !isEasterWord(search))p.append('search',search);
+  else if(search && isEasterWord(search)){/* easter words still search too */}
+  if(search)p.append('search',search);
+  p.append('limit','300');
+  try{
+    const r=await fetch('/pandals?'+p.toString()); const data=await r.json();
+    document.getElementById('renderedCountLabel').textContent=`${data.items?data.items.length:0} of ${data.total} pandals${data.sharodiya_subhechha?' · '+data.sharodiya_subhechha:''}`;
+    // Surface backend Bengali easter (API carries Sharodiya soul too).
+    checkApiEaster(data, search);
+    const grid=document.getElementById('pandalsGrid');
+    if(!data.items||!data.items.length){
+      const easterLine=data.easter?`<br><span class="serif">${escapeHtml(data.easter)}</span>`:'';
+      grid.innerHTML=`<div class="empty"><span class="serif">ধুর, কিছু পাওয়া গেল না!</span>Try a softer search — “Bagbazar”, “para”, or clear the filters.${easterLine}</div>`;
+      return;
     }
-
-    function renderSkeletons() {
-      const grid = document.getElementById('pandalsGrid');
-      grid.innerHTML = Array(6).fill(0).map(() => `
-        <div class="skeleton-card">
-          <div style="display: flex; gap: 8px;">
-            <div class="skeleton-box" style="width: 70px; height: 22px;"></div>
-            <div class="skeleton-box" style="width: 90px; height: 22px;"></div>
-          </div>
-          <div class="skeleton-box" style="width: 80%; height: 24px;"></div>
-          <div class="skeleton-box" style="width: 60%; height: 16px;"></div>
-          <div class="skeleton-box" style="width: 100%; height: 60px;"></div>
-          <div class="skeleton-box" style="width: 40%; height: 16px;"></div>
+    window._cachedPandals=data.items;
+    grid.innerHTML=data.items.map((d,idx)=>{
+      const pop=d.popularity==='popular';
+      const bn=pop?BN_POP[d.id%BN_POP.length]:BN_PARA[d.id%BN_PARA.length];
+      return `<article class="card" tabindex="0" role="button" aria-label="${escapeHtml(d.name)}" onclick="openPandalModal(${idx})" onkeydown="if(event.key==='Enter')openPandalModal(${idx})">
+        <div class="tags">
+          <span class="tag ${pop?'t-pop':'t-para'}">${pop?'Popular':'Para'}</span>
+          ${d.bonedi?'<span class="tag t-bonedi">Bonedi</span>':''}
+          ${d.cross_referenced?`<span class="tag t-verified">Verified · ${d.source_count}</span>`:''}
+          <span class="tag t-dist">${escapeHtml(d.district||'Bengal')}</span>
+          <span class="score">${Math.round(d.popularity_score||0)}<span style="font-weight:400;color:var(--faint)">/100</span></span>
         </div>
-      `).join('');
-    }
+        <h3>${escapeHtml(d.name)}</h3>
+        <div class="where">${d.locality?`<span><b>${escapeHtml(d.locality)}</b>${d.nearest_metro?' · '+escapeHtml(d.nearest_metro):''}</span>`:''}${d.year_established?`<span>Since ${escapeHtml(d.year_established)}</span>`:''}</div>
+        <p class="desc">${escapeHtml(d.description||'A quiet community celebration in West Bengal.')}</p>
+        <div class="foot"><span class="bn-note serif">${bn}</span>${d.latitude&&d.longitude?`<a class="map" href="https://www.google.com/maps/search/?api=1&query=${d.latitude},${d.longitude}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Map →</a>`:'<span>· · ·</span>'}</div>
+      </article>`;
+    }).join('');
+  }catch(err){
+    document.getElementById('pandalsGrid').innerHTML=`<div class="empty"><span class="serif">নেটওয়ার্কে গোলমাল!</span>${escapeHtml(err.message)}</div>`;
+  }
+}
 
-    async function fetchPandals() {
-      renderSkeletons();
+function setPopularityFilter(v,btn){
+  currentPopularity=v;
+  document.querySelectorAll('.pill[data-filter]').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); fetchPandals();
+}
+function toggleBonediFilter(btn){isBonediOnly=!isBonediOnly;btn.classList.toggle('active',isBonediOnly);btn.classList.toggle('soft',isBonediOnly);fetchPandals();}
+function toggleCrossFilter(btn){isCrossOnly=!isCrossOnly;btn.classList.toggle('active',isCrossOnly);btn.classList.toggle('soft',isCrossOnly);fetchPandals();}
+function debounceSearch(){clearTimeout(searchTimeout);searchTimeout=setTimeout(fetchPandals,260);}
 
-      const search = document.getElementById('searchInput').value.trim();
-      const district = document.getElementById('districtSelect').value;
-      const zone = document.getElementById('zoneSelect').value;
+/* ---------- modal ---------- */
+const TIPS_POP=['Tip: go early morning — <span class="serif">ভোরে ভিড় কম।</span>','Tip: Salt Lake feeders + metro beat the jam.','Tip: carry water — <span class="serif">লম্বা লাইন!</span>'];
+const TIPS_PARA=['Tip: evenings smell of dhuno — <span class="serif">সন্ধ্যায় যান।</span>','Tip: sit a while, join pushpanjali.','Tip: ask locals for the mishti shop nearby.'];
+const TIPS_BONEDI=['Tip: dress traditional — bari pujas love it.','Tip: mornings are for family rituals. <span class="serif">সকালেই প্রাণ।</span>'];
 
-      const params = new URLSearchParams();
-      if (currentPopularity) params.append('popularity', currentPopularity);
-      if (district) params.append('district', district);
-      if (zone) params.append('zone', zone);
-      if (isBonediOnly) params.append('bonedi', 'true');
-      if (isCrossOnly) params.append('cross_referenced', 'true');
-      if (search) params.append('search', search);
-      params.append('limit', '300');
+function openPandalModal(i){
+  const d=window._cachedPandals[i]; if(!d)return; activeModalPandal=d;
+  document.getElementById('modalTitle').textContent=d.name;
+  document.getElementById('modalDesc').textContent=d.description||'A community Durga Puja celebration in West Bengal.';
+  const pop=d.popularity==='popular';
+  let b=`<span class="tag ${pop?'t-pop':'t-para'}">${pop?'Popular theme':'Para samiti'}</span>`;
+  if(d.bonedi)b+=`<span class="tag t-bonedi">Bonedi bari</span>`;
+  if(d.cross_referenced)b+=`<span class="tag t-verified">Verified · ${d.source_count} sources</span>`;
+  b+=`<span class="tag t-dist">${escapeHtml(d.district||'West Bengal')}</span>`;
+  document.getElementById('modalBadges').innerHTML=b;
+  document.getElementById('modalInfoGrid').innerHTML=`
+    <div><span>Score</span><b>${Math.round(d.popularity_score)}/100</b></div>
+    <div><span>Locality · Zone</span><b>${escapeHtml(d.locality||'—')} · ${escapeHtml(d.zone||'—')}</b></div>
+    <div><span>Nearest metro / rail</span><b>${escapeHtml(d.nearest_metro||'A short rickshaw away')}</b></div>
+    <div><span>Established</span><b>${escapeHtml(d.year_established||'Old para record')}</b></div>
+    <div><span>Coordinates</span><b class="mono">${d.latitude&&d.longitude?d.latitude.toFixed(4)+', '+d.longitude.toFixed(4):'District centre'}</b></div>
+    <div><span>Slug</span><b class="mono">${escapeHtml(d.slug||'')}</b></div>`;
+  let src=[]; try{src=typeof d.sources==='string'?JSON.parse(d.sources):(d.sources||[])}catch(e){src=[d.source||'Crawler']}
+  document.getElementById('modalSources').innerHTML=src.map(s=>`<span class="chip">${escapeHtml(s)}</span>`).join('')||'<span class="chip">Community record</span>';
+  // Prefer backend Bengali tip (API easter) when available.
+  if(d.bengali_tip){document.getElementById('modalTip').innerHTML=`<span class="serif">${escapeHtml(d.bengali_tip)}</span>${d.sharodiya_note?`<br><span style="opacity:.75">${escapeHtml(d.sharodiya_note)}</span>`:''}`;}
+  else{const pool=d.bonedi?TIPS_BONEDI:(pop?TIPS_POP:TIPS_PARA);document.getElementById('modalTip').innerHTML=pool[d.id%pool.length];}
+  const mb=document.getElementById('modalMapBtn');
+  if(d.latitude&&d.longitude){mb.href=`https://www.google.com/maps/search/?api=1&query=${d.latitude},${d.longitude}`;mb.style.display='inline-flex';}
+  else mb.style.display='none';
+  document.getElementById('detailModal').classList.add('active');
+}
+function closeModal(){document.getElementById('detailModal').classList.remove('active');}
+function closeModalOnOverlay(e){if(e.target.id==='detailModal')closeModal();}
+function copyPandalJson(){
+  if(!activeModalPandal)return;
+  navigator.clipboard.writeText(`${location.origin}/pandals/${activeModalPandal.id}`).then(()=>showToast('API link copied — <span class="serif">শেয়ার করুন!</span>'));
+}
 
-      try {
-        const res = await fetch(`/pandals?${params.toString()}`);
-        const data = await res.json();
-        const grid = document.getElementById('pandalsGrid');
+/* ---------- crawl ---------- */
+async function triggerCrawl(){
+  const btn=document.getElementById('crawlBtn');
+  btn.disabled=true; const old=btn.textContent; btn.textContent='Brewing… (crawler cholche)';
+  showToast('Crawler cholche — <span class="serif">চা খেয়ে আসুন ☕</span>');
+  try{
+    await fetch('/crawl',{method:'POST'});
+    setTimeout(async()=>{await loadStats();await fetchPandals();btn.disabled=false;btn.textContent=old;
+      showToast('Fresh data! <span class="serif">বলো দুগ্গা মাঈ কী — জয়!</span>');},3000);
+  }catch(e){showToast('Crawl hiccup: '+escapeHtml(e.message));btn.disabled=false;btn.textContent=old;}
+}
 
-        document.getElementById('renderedCountLabel').innerText = `Showing ${data.items ? data.items.length : 0} of ${data.total} pandals`;
+/* ================= easters (mirrors app/easters.py) ================= */
+const EASTER_MAP={
+  'dhaak':'<span class="serif">ঢাকে কাঠি পড়েছে — পুজো এসে গেছে! 🥁</span>',
+  'dhak':'<span class="serif">ঢাকে কাঠি পড়েছে — পুজো এসে গেছে! 🥁</span>',
+  'ঢাক':'<span class="serif">ঢাকে কাঠি পড়েছে — পুজো এসে গেছে! 🥁</span>',
+  'tram':'ট্রামে চেপে উত্তর থেকে দক্ষিণ — <span class="serif">ধীরে চলো, পুজো দেখো! 🚋</span>',
+  'adda':'<span class="serif">পাড়ার মোড়ে আড্ডা</span> — cha haate thakur dekha! ☕',
+  'আড্ডা':'<span class="serif">পাড়ার মোড়ে আড্ডা</span> — cha haate thakur dekha! ☕',
+  'para':'<span class="serif">পাড়ার পুজোই আসল পুজো!</span> ফাঁকায় ঠাকুর দেখুন 🏘️',
+  'mishti':'<span class="serif">মিষ্টি মুখ করুন!</span> Shubho Sharodiya 🍬',
+  'misti':'<span class="serif">মিষ্টি মুখ করুন!</span> Shubho Sharodiya 🍬',
+  'মিষ্টি':'<span class="serif">মিষ্টি মুখ করুন!</span> Shubho Sharodiya 🍬',
+  'roshogolla':'রসগোল্লা না খেলে পুজো অসম্পূর্ণ! <span class="serif">শুভ শারদীয়া।</span>',
+  'dugga':'<span class="serif">বলো দুগ্গা মাঈ কী — জয়! 🙏</span>',
+  'durga':'<span class="serif">বলো দুগ্গা মাঈ কী — জয়! 🙏</span>',
+  'দুর্গা':'<span class="serif">বলো দুগ্গা মাঈ কী — জয়! 🙏</span>',
+  'agomoni':'<span class="serif">আগমনীর সুর বাজছে — মা আসছেন! 🌾</span>',
+  'mahalaya':'মহালয়ার ভোরে বীরেন্দ্রকৃষ্ণ — <span class="serif">পুজো আসছে! 📻</span>',
+  'মহালয়া':'মহালয়ার ভোরে বীরেন্দ্রকৃষ্ণ — <span class="serif">পুজো আসছে! 📻</span>',
+  'panchami':'পঞ্চমীতেই উদ্বোধনের ভিড় — <span class="serif">জুতো সেলাই থেকে চণ্ডীপাঠ!</span>',
+  'shashti':'ষষ্ঠীতে বোধন — <span class="serif">মায়ের ঘুম ভাঙে আজ! 🔔</span>',
+  'saptami':'<span class="serif">শুভ সপ্তমী!</span> সকালে অঞ্জলি, বিকেলে ঘোরা 🌼',
+  'ashtami':'<span class="serif">শুভ অষ্টমী!</span> পুষ্পাঞ্জলি আর খিচুড়ি ভোগ 🙏🍛',
+  'অষ্টমী':'<span class="serif">শুভ অষ্টমী!</span> পুষ্পাঞ্জলি আর খিচুড়ি ভোগ 🙏🍛',
+  'navami':'<span class="serif">শুভ নবমী!</span> আজ রাত জেগে ঠাকুর দেখার রাত 🌙',
+  'dashami':'<span class="serif">শুভ বিজয়া! আসছে বছর আবার হবে ❤️</span>',
+  'bijoya':'<span class="serif">শুভ বিজয়া!</span> মিষ্টিমুখ আর প্রণাম 🙏',
+  'বিজয়া':'<span class="serif">শুভ বিজয়া!</span> মিষ্টিমুখ আর প্রণাম 🙏',
+  'bhasan':'ভাসানের ঢাক — <span class="serif">আসছে বছর আবার হবে!</span>',
+  'sindoor':'<span class="serif">সিঁদুর খেলায় রাঙা দশমী! 🔴</span>',
+  'sindoor khela':'<span class="serif">সিঁদুর খেলায় রাঙা দশমী! 🔴</span>',
+  'dhunuchi':'<span class="serif">ধুনুচি নাচের ধোঁয়ায় সন্ধ্যা নামে! 🔥</span>',
+  'ধুনুচি':'<span class="serif">ধুনুচি নাচের ধোঁয়ায় সন্ধ্যা নামে! 🔥</span>',
+  'pushpanjali':'<span class="serif">ভোরের পুষ্পাঞ্জলি — 🌸</span> ফুল, বেলপাতা আর মন্ত্র!',
+  'anjali':'<span class="serif">ভোরের পুষ্পাঞ্জলি — 🌸</span> ফুল, বেলপাতা আর মন্ত্র!',
+  'bhog':'<span class="serif">খিচুড়ি ভোগ আর লাবড়া — 🍛</span> পুজোর আসল স্বাদ!',
+  'khichuri':'<span class="serif">খিচুড়ি ভোগ আর লাবড়া — 🍛</span> পুজোর আসল স্বাদ!',
+  'kashful':'<span class="serif">কাশফুল দুলছে — মা আসছেন! 🌾</span>',
+  'কাশফুল':'<span class="serif">কাশফুল দুলছে — মা আসছেন! 🌾</span>',
+  'shiuli':'<span class="serif">শিউলি ফুলের গন্ধে ভোরের পুজো! 🤍</span>',
+  'শিউলি':'<span class="serif">শিউলি ফুলের গন্ধে ভোরের পুজো! 🤍</span>',
+  'kumartuli':'কুমারটুলির মাটির গন্ধে <span class="serif">মায়ের চক্ষুদান! 👁️</span>',
+  'কুমারটুলি':'কুমারটুলির মাটির গন্ধে <span class="serif">মায়ের চক্ষুদান! 👁️</span>',
+  'alpona':'<span class="serif">আলপনার সাদা দাগে উঠোন সাজে! 〰️</span>',
+  'alpana':'<span class="serif">আলপনার সাদা দাগে উঠোন সাজে! 〰️</span>',
+  'bonedi':'<span class="serif">বনেদি বাড়ির ঠাকুরদালানে 🏛️</span> একবার বসুন!',
+  'bhalobasa':'<span class="serif">ভালোবাসা থেকে কলকাতা! ❤️</span>',
+  'kolkata':'কলকাতা মানে পুজো, <span class="serif">পুজো মানে কলকাতা! ❤️</span>'
+};
+const PETAL_WORDS=new Set(['bhalobasa','dugga','durga','bijoya','agomoni','ভালোবাসা','দুর্গা','বিজয়া']);
+function isEasterWord(s){s=(s||'').toLowerCase().trim();if(EASTER_MAP[s])return true;for(const k of Object.keys(EASTER_MAP)){if(k&&(k.includes(s)||s.includes(k))&&s.length>=3)return true;}return false;}
+let _easterCool=0, _lastApiEaster='';
+function checkEasters(raw){
+  const s=(raw||'').toLowerCase().trim();
+  const now=Date.now(); if(now-_easterCool<2500||!s)return;
+  let hit=EASTER_MAP[s];
+  if(!hit){for(const [k,v] of Object.entries(EASTER_MAP)){if(k&&(k.includes(s)||s.includes(k))&&s.length>=3){hit=v;break;}}}
+  if(hit){_easterCool=now;showToast(hit);beatSeal();if(PETAL_WORDS.has(s))petalShower(60);}
+}
+/* API easter: backend /pandals returns {easter, sharodiya_subhechha} — surface it. */
+function checkApiEaster(data, search){
+  if(!data||!data.easter||!search)return;
+  if(data.easter===_lastApiEaster&&Date.now()-_easterCool<8000)return;
+  _lastApiEaster=data.easter; _easterCool=Date.now();
+  showToast(escapeHtml(data.easter)); beatSeal();
+  const s=(search||'').toLowerCase().trim();
+  if(PETAL_WORDS.has(s)||/bijoya|bhalobasa|dugga|durga|agomoni/.test(s))petalShower(50);
+}
+function beatSeal(){const m=document.getElementById('sealMark');m.classList.remove('beating');void m.offsetWidth;m.classList.add('beating');}
 
-        if (!data.items || data.items.length === 0) {
-          grid.innerHTML = `
-            <div class="empty-state">
-              <svg class="empty-state-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-              <h3 style="color: var(--text-primary); margin-bottom: 6px;">No pandals found</h3>
-              <p>Try clearing or broadening your search terms or district filters.</p>
-            </div>
-          `;
-          return;
-        }
+/* seal: 5 taps → shiuli shower */
+let taps=[], TAP_N=5;
+document.getElementById('brandSeal').addEventListener('click',()=>{
+  const now=Date.now(); taps=taps.filter(t=>now-t<2500); taps.push(now);
+  beatSeal();
+  if(taps.length>=TAP_N){taps=[];petalShower(70);showToast('<span class="serif">ঢাক বাজছে! বলো দুগ্গা মাঈ কী — জয়!</span>');}
+});
+function petalShower(n){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+  const cols=['#FFFFFF','#FFF3D6','#FF8A3D','#C1272D','#F6C453'];
+  for(let i=0;i<n;i++){
+    const p=document.createElement('div');p.className='petal';
+    const s=6+Math.random()*9;
+    p.style.cssText=`left:${Math.random()*100}vw;width:${s}px;height:${s*1.25}px;background:${cols[i%cols.length]};border:1px solid rgba(0,0,0,.06);animation-duration:${2.4+Math.random()*2.4}s;animation-delay:${Math.random()*.6}s;transform:rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(p);setTimeout(()=>p.remove(),5200);
+  }
+}
 
-        window._cachedPandals = data.items;
+/* footer proverb rotation (mirrors backend PROVERBS) */
+const PROVERBS=['আসছে বছর আবার হবে →','ঢাকের তালে কোমর দোলে →','পুজো মানে পাড়া, পাড়া মানে আপন →','ভোরের পুষ্পাঞ্জলি, সন্ধ্যার ধুনো →','ভিড় হবে, মন ভরবে →','মা আসছেন — পথ ছাড়ো! →','কাশফুল দুললেই মন পুজো-পুজো করে! →'];
+let pi=0;
+document.getElementById('proverbBtn').addEventListener('click',e=>{
+  pi=(pi+1)%PROVERBS.length;e.target.textContent=PROVERBS[pi];
+  if(pi===0)petalShower(30);
+});
 
-        grid.innerHTML = data.items.map((p, idx) => {
-          const isPop = p.popularity === 'popular';
-          const popTag = isPop
-            ? `<span class="tag tag-popular"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z"/></svg> Popular</span>`
-            : `<span class="tag tag-unpopular"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Para Samiti</span>`;
+function escapeHtml(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');}
 
-          const bonediTag = p.bonedi
-            ? `<span class="tag tag-bonedi"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg> Bonedi</span>`
-            : '';
-
-          const crossTag = p.cross_referenced
-            ? `<span class="tag tag-cross"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> Verified (${p.source_count})</span>`
-            : '';
-
-          const districtTag = `<span class="tag tag-district">${p.district || 'West Bengal'}</span>`;
-
-          let mapLink = '';
-          if (p.latitude && p.longitude) {
-            mapLink = `
-              <a href="https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}" target="_blank" class="btn-card-map" onclick="event.stopPropagation()">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                Map
-              </a>
-            `;
-          }
-
-          const scoreVal = Math.round(p.popularity_score || 0);
-
-          return `
-            <div class="pandal-card" onclick="openPandalModal(${idx})">
-              <div>
-                <div class="card-top">
-                  <div class="card-tags">
-                    ${popTag}
-                    ${bonediTag}
-                    ${crossTag}
-                    ${districtTag}
-                  </div>
-                  <div class="card-score-badge" title="Popularity Score">
-                    ${scoreVal}<span>/100</span>
-                  </div>
-                </div>
-
-                <h3 class="card-title">${escapeHtml(p.name)}</h3>
-
-                <div class="card-meta-list">
-                  ${p.locality ? `
-                    <div class="meta-item">
-                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
-                      <span>${escapeHtml(p.locality)}</span>
-                    </div>
-                  ` : ''}
-                  ${p.nearest_metro ? `
-                    <div class="meta-item">
-                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10"/></svg>
-                      <span>${escapeHtml(p.nearest_metro)}</span>
-                    </div>
-                  ` : ''}
-                  ${p.year_established ? `
-                    <div class="meta-item">
-                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                      <span>Founded ${escapeHtml(p.year_established)}</span>
-                    </div>
-                  ` : ''}
-                </div>
-
-                <p class="card-desc">${escapeHtml(p.description || 'Community Durga Puja pandal celebration in West Bengal.')}</p>
-              </div>
-
-              <div class="card-footer">
-                <div class="source-avatars">
-                  <span>${p.source_count || 1} citation${(p.source_count || 1) > 1 ? 's' : ''}</span>
-                </div>
-                <div class="action-links">
-                  ${mapLink}
-                </div>
-              </div>
-            </div>
-          `;
-        }).join('');
-
-      } catch (err) {
-        console.error("Fetch error:", err);
-        document.getElementById('pandalsGrid').innerHTML = `
-          <div class="empty-state">
-            <h3 style="color: var(--accent-crimson);">Failed to load pandals</h3>
-            <p>${err.message}</p>
-          </div>
-        `;
-      }
-    }
-
-    function setPopularityFilter(val, btn) {
-      currentPopularity = val;
-      document.querySelectorAll('.pill-tabs .pill-btn').forEach(b => {
-        if (!b.dataset.toggle) b.classList.remove('active');
-      });
-      btn.classList.add('active');
-      fetchPandals();
-    }
-
-    function toggleBonediFilter(btn) {
-      isBonediOnly = !isBonediOnly;
-      btn.classList.toggle('active', isBonediOnly);
-      fetchPandals();
-    }
-
-    function toggleCrossFilter(btn) {
-      isCrossOnly = !isCrossOnly;
-      btn.classList.toggle('active', isCrossOnly);
-      fetchPandals();
-    }
-
-    function debounceSearch() {
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(fetchPandals, 250);
-    }
-
-    // Modal Details Inspector
-    function openPandalModal(index) {
-      const p = window._cachedPandals[index];
-      if (!p) return;
-      activeModalPandal = p;
-
-      document.getElementById('modalTitle').innerText = p.name;
-      document.getElementById('modalDesc').innerText = p.description || 'Community Durga Puja celebration in West Bengal.';
-
-      // Badges
-      const isPop = p.popularity === 'popular';
-      let badgesHtml = isPop
-        ? `<span class="tag tag-popular">Popular Theme</span>`
-        : `<span class="tag tag-unpopular">Para Samiti</span>`;
-      if (p.bonedi) badgesHtml += `<span class="tag tag-bonedi">Bonedi Bari</span>`;
-      if (p.cross_referenced) badgesHtml += `<span class="tag tag-cross">Verified Consensus (${p.source_count} Sources)</span>`;
-      badgesHtml += `<span class="tag tag-district">${p.district || 'West Bengal'}</span>`;
-      document.getElementById('modalBadges').innerHTML = badgesHtml;
-
-      // Telemetry info grid
-      const grid = document.getElementById('modalInfoGrid');
-      grid.innerHTML = `
-        <div class="modal-info-item">
-          <span class="modal-info-k">Popularity Score</span>
-          <span class="modal-info-v" style="color: var(--accent-gold);">${Math.round(p.popularity_score)} / 100</span>
-        </div>
-        <div class="modal-info-item">
-          <span class="modal-info-k">Locality / Zone</span>
-          <span class="modal-info-v">${p.locality || 'N/A'} (${p.zone || 'General'})</span>
-        </div>
-        <div class="modal-info-item">
-          <span class="modal-info-k">Nearest Metro / Rail Confluence</span>
-          <span class="modal-info-v">${p.nearest_metro || 'Not within 1km of metro'}</span>
-        </div>
-        <div class="modal-info-item">
-          <span class="modal-info-k">Established Year</span>
-          <span class="modal-info-v">${p.year_established || 'Heritage Community Record'}</span>
-        </div>
-        <div class="modal-info-item">
-          <span class="modal-info-k">Coordinates</span>
-          <span class="modal-info-v" style="font-family: var(--font-mono); font-size: 0.8rem;">
-            ${p.latitude && p.longitude ? `${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}` : 'Approximated by district center'}
-          </span>
-        </div>
-        <div class="modal-info-item">
-          <span class="modal-info-k">Canonical Slug</span>
-          <span class="modal-info-v" style="font-family: var(--font-mono); font-size: 0.78rem;">${p.slug}</span>
-        </div>
-      `;
-
-      // Sources
-      const sourcesWrap = document.getElementById('modalSources');
-      let sourcesList = [];
-      try {
-        sourcesList = typeof p.sources === 'string' ? JSON.parse(p.sources) : (p.sources || []);
-      } catch (e) {
-        sourcesList = [p.source || 'Standard Crawler'];
-      }
-      sourcesWrap.innerHTML = sourcesList.map(s => `<span class="source-chip">${escapeHtml(s)}</span>`).join('');
-
-      // Map action button
-      const mapBtn = document.getElementById('modalMapBtn');
-      if (p.latitude && p.longitude) {
-        mapBtn.href = `https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`;
-        mapBtn.style.display = 'inline-flex';
-      } else {
-        mapBtn.style.display = 'none';
-      }
-
-      document.getElementById('detailModal').classList.add('active');
-    }
-
-    function closeModal() {
-      document.getElementById('detailModal').classList.remove('active');
-    }
-    function closeModalOnOverlay(e) {
-      if (e.target.id === 'detailModal') closeModal();
-    }
-
-    function copyPandalJson() {
-      if (!activeModalPandal) return;
-      const url = `${window.location.origin}/pandals/${activeModalPandal.id}`;
-      navigator.clipboard.writeText(url).then(() => {
-        showToast("Copied API endpoint URL to clipboard!", "success");
-      });
-    }
-
-    async function triggerCrawl() {
-      const btn = document.getElementById('crawlBtn');
-      btn.disabled = true;
-      btn.innerHTML = `
-        <svg class="animate-spin" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M4 12a8 8 0 018-8v8H4z"/></svg>
-        Crawling Sources...
-      `;
-      showToast("Triggered statewide crawl job across Wikipedia, Reddit feeds & district catalogs...", "info");
-
-      try {
-        const res = await fetch('/crawl', { method: 'POST' });
-        const data = await res.json();
-        
-        setTimeout(async () => {
-          await loadStats();
-          await fetchPandals();
-          btn.disabled = false;
-          btn.innerHTML = `
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Trigger Crawler
-          `;
-          showToast("Crawl complete! Data refreshed and cross-referenced successfully.", "success");
-        }, 3200);
-
-      } catch (err) {
-        showToast("Crawl error: " + err.message, "error");
-        btn.disabled = false;
-      }
-    }
-
-    function escapeHtml(str) {
-      if (!str) return '';
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#039;');
-    }
-
-    // Bootstrap
-    loadStats();
-    fetchPandals();
-  </script>
+loadStats(); fetchPandals();
+</script>
 </body>
 </html>

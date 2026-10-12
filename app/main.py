@@ -9,6 +9,7 @@ from app.config import settings
 from app.database import init_db
 from app.scheduler import scheduler
 from app.api.routes import router as api_router
+from app.easters import get_subhechha_now, get_random_proverb, get_header_subhechha, get_header_proverb
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -23,11 +24,23 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="REST API and autonomous web crawler for cataloging popular and unpopular Durga Puja pandals in Kolkata and West Bengal.",
+    description="REST API and autonomous web crawler for cataloging popular and unpopular Durga Puja pandals in Kolkata and West Bengal. শারদীয়া শুভেচ্ছা! Try ?search=dhaak 🥁",
     lifespan=lifespan,
     docs_url="/docs",
     redoc_url="/redoc"
 )
+
+# Sharodiya easter headers on every response — Bengali soul in the API.
+# NOTE: headers must stay ASCII/latin-1; full Bengali script lives in JSON bodies.
+@app.middleware("http")
+async def sharodiya_headers_middleware(request, call_next):
+    resp = await call_next(request)
+    try:
+        resp.headers["X-Sharodiya-Subhechha"] = get_header_subhechha()
+        resp.headers["X-Pujo-Proverb"] = get_header_proverb()
+    except Exception:
+        pass
+    return resp
 
 # Enable CORS for browser integration
 app.add_middleware(
@@ -60,7 +73,10 @@ def health_check():
     return {
         "status": "healthy",
         "version": settings.VERSION,
-        "scheduler_running": scheduler.is_running
+        "scheduler_running": scheduler.is_running,
+        "subhechha": get_subhechha_now(),
+        "proverb": get_random_proverb(),
+        "easter_hint": "Try /pandals?search=dhaak 🥁 — or kashful, shiuli, bijoya, dhunuchi, bhog",
     }
 
 if __name__ == "__main__":

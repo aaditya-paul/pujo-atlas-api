@@ -32,6 +32,9 @@ class PandalResponse(PandalBase):
     slug: str
     created_at: Optional[datetime.datetime] = None
     updated_at: Optional[datetime.datetime] = None
+    # Bengali soul — additive easters, populated per-request in routes.
+    bengali_tip: Optional[str] = None
+    sharodiya_note: Optional[str] = None
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -42,6 +45,10 @@ class PandalListResponse(BaseModel):
     popular_count: int
     unpopular_count: int
     items: List[PandalResponse]
+    # Sharodiya easters on every list response.
+    sharodiya_subhechha: str = "শারদীয়া শুভেচ্ছা! পুজো ভালো কাটুক।"
+    easter: Optional[str] = None
+    proverb: Optional[str] = None
 
 class PandalStats(BaseModel):
     total_pandals: int
@@ -53,11 +60,17 @@ class PandalStats(BaseModel):
     zones: Dict[str, int]
     categories: Dict[str, int]
     top_popular: List[str]
+    # Bengali greetings on stats.
+    subhechha: str = "শারদীয়া শুভেচ্ছা! পুজো ভালো কাটুক।"
+    proverb: str = "আসছে বছর আবার হবে!"
+    easter_note: Optional[str] = "ঢাকে কাঠি পড়েছে — পুজো এসে গেছে!"
 
 class CrawlTriggerResponse(BaseModel):
     message: str
     status: str
     crawl_id: Optional[int] = None
+    bengali_message: str = "কুমোরটুলির আলো জ্বলে উঠেছে! Crawler cholche — চা খেয়ে আসুন ☕"
+    subhechha: str = "শারদীয়া শুভেচ্ছা! পুজো ভালো কাটুক।"
 
 class CrawlLogResponse(BaseModel):
     id: int
