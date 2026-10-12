@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>West Bengal & Kolkata Durga Puja Pandal Explorer</title>
+  <meta name="description" content="Statewide multi-source catalog of Durga Puja pandals in West Bengal: cross-referencing popular mega-themes, quiet neighborhood paras, and centuries-old bonedi baris.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ==========================================================================
+       1. DESIGN SYSTEM & TOKENS (Anti-Slop / Quiet Luxury Heritage Palette)
+       ========================================================================== */
+    :root {
+      --bg-canvas: #090a0f;
+      --bg-surface: #11131a;
+      --bg-surface-elevated: #161922;
+      --bg-surface-hover: #1e222f;
+      --bg-input: #0d0f15;
+
+      --border-hairline: rgba(255, 255, 255, 0.07);
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --border-active: rgba(225, 29, 72, 0.45);
+
+      /* Semantic Accents */
+      --accent-crimson: #e11d48;       /* Traditional Alta Crimson */
+      --accent-crimson-subtle: rgba(225, 29, 72, 0.14);
+      --accent-amber: #d97706;         /* Marigold Amber */
+      --accent-amber-subtle: rgba(217, 119, 6, 0.14);
+      --accent-gold: #f59e0b;          /* Brass / Dhunuchi Gold */
+      --accent-emerald: #10b981;       /* Verified Consensus */
+      --accent-emerald-subtle: rgba(16, 185, 129, 0.14);
+      --accent-cyan: #06b6d4;          /* Quiet Para Samiti */
+      --accent-cyan-subtle: rgba(6, 182, 212, 0.14);
+
+      /* Typography & Text */
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --text-highlight: #fef08a;
+
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-display: 'Cinzel', serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+
+      --shadow-surface: 0 4px 20px rgba(0, 0, 0, 0.35);
+      --shadow-elevated: 0 12px 36px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 24px rgba(225, 29, 72, 0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+      min-height: 100vh;
+      line-height: 1.5;
+      padding-bottom: 80px;
+      overflow-x: hidden;
+    }
+
+    /* Subtle Architectural Heritage Grid */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.08) 0%, transparent 60%),
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 100% 100%, 48px 48px, 48px 48px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .app-wrapper {
+      position: relative;
+      z-index: 1;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ==========================================================================
+       2. HEADER & NAVIGATION
+       ========================================================================== */
+    header {
+      border-bottom: 1px solid var(--border-hairline);
+      background: rgba(9, 10, 15, 0.85);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      transition: border-color 0.2s;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      gap: 16px;
+    }
+
+    .brand-mark {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-crimson), #9f1239);
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(225, 29, 72, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .brand-text h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      letter-spacing: 0.02em;
+      color: var(--text-primary);
+      font-weight: 700;
+    }
+
+    .brand-text p {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      text-decoration: none;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .btn:focus-visible {
+      outline: 2px solid var(--accent-crimson);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--accent-crimson);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.4);
+    }
+    .btn-primary:hover {
+      background: #f43f5e;
+      box-shadow: 0 4px 16px rgba(225, 29, 72, 0.55);
+    }
+    .btn-primary:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-secondary {
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-subtle);
+    }
+    .btn-secondary:hover {
+      background: var(--bg-surface-hover);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+    }
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* ==========================================================================
+       3. HERO SECTION (Cultural Dignity & Editorial Clarity)
+       ========================================================================== */
+    .hero-section {
+      padding: 48px 0 28px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 14px;
+      border-radius: 999px;
+      background: var(--accent-crimson-subtle);
+      border: 1px solid rgba(225, 29, 72, 0.3);
+      color: #fda4af;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      color: #fff;
+      max-width: 900px;
+      margin: 0 auto 16px;
+    }
+
+    .hero-title span {
+      background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #e11d48 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 740px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ==========================================================================
+       4. BENTO KPI METRICS ROW
+       ========================================================================== */
+    .metrics-bento {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 14px;
+      margin: 32px 0 28px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .metric-card:hover {
+      border-color: var(--border-subtle);
+      background: var(--bg-surface-elevated);
+      transform: translateY(-2px);
+    }
+
+    .metric-card.hero-kpi {
+      grid-column: span 4;
+      background: linear-gradient(145deg, rgba(225, 29, 72, 0.12) 0%, rgba(17, 19, 26, 0.95) 100%);
+      border-color: rgba(225, 29, 72, 0.25);
+    }
+    .metric-card.reg-kpi {
+      grid-column: span 2;
+    }
+
+    @media (max-width: 1024px) {
+      .metric-card.hero-kpi { grid-column: span 12; }
+      .metric-card.reg-kpi { grid-column: span 3; }
+    }
+    @media (max-width: 768px) {
+      .metric-card.reg-kpi { grid-column: span 6; }
+    }
+
+    .metric-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .metric-label {
+      font-size: 0.76rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-secondary);
+    }
+
+    .metric-icon-wrap {
+      width: 28px;
+      height: 28px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .metric-value {
+      font-size: 2.1rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      font-variant-numeric: tabular-nums;
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+
+    .metric-subtext {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bar-meter {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      margin-top: 10px;
+      overflow: hidden;
+      display: flex;
+    }
+    .bar-meter-fill {
+      height: 100%;
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ==========================================================================
+       5. UNIFIED PAGE-LEVEL CONTROL BAR
+       ========================================================================== */
+    .control-deck {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: var(--shadow-surface);
+    }
+
+    .search-filter-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-wrapper {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 11px 40px 11px 42px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.18s;
+    }
+    .search-input:focus {
+      border-color: var(--accent-crimson);
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
+      background: #0f1118;
+    }
+    .search-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .search-shortcut {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 0.72rem;
+      font-family: var(--font-mono);
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      padding: 2px 6px;
+      border-radius: 4px;
+      pointer-events: none;
+    }
+
+    .select-wrap {
+      position: relative;
+      min-width: 190px;
+    }
+
+    .custom-select {
+      width: 100%;
+      appearance: none;
+      background: var(--bg-input);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 11px 36px 11px 14px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+      transition: border-color 0.18s;
+    }
+    .custom-select:focus {
+      border-color: var(--accent-crimson);
+      box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.15);
+    }
+
+    .select-arrow {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: var(--text-muted);
+    }
+
+    /* Filter Segment Tabs */
+    .filter-segment-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 14px;
+    }
+
+    .pill-tabs {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pill-btn {
+      background: transparent;
+      border: 1px solid var(--border-hairline);
+      color: var(--text-secondary);
+      padding: 7px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: all 0.15s ease;
+    }
+    .pill-btn:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+    }
+    .pill-btn.active {
+      background: var(--accent-crimson);
+      border-color: var(--accent-crimson);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(225, 29, 72, 0.35);
+    }
+    .pill-btn.active .pill-count {
+      background: rgba(0, 0, 0, 0.25);
+      color: #fff;
+    }
+
+    .pill-count {
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+    }
+
+    .deck-stats {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* ==========================================================================
+       6. PANDAL CARDS GRID & CARD DESIGN
+       ========================================================================== */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+
+    .pandals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(370px, 1fr));
+      gap: 18px;
+    }
+
+    @media (max-width: 480px) {
+      .pandals-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .pandal-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      cursor: pointer;
+    }
+    .pandal-card:hover {
+      background: var(--bg-surface-elevated);
+      border-color: var(--border-subtle);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-elevated);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .card-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .tag {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tag-popular {
+      background: var(--accent-crimson-subtle);
+      color: #fda4af;
+      border: 1px solid rgba(225, 29, 72, 0.35);
+    }
+    .tag-unpopular {
+      background: var(--accent-cyan-subtle);
+      color: #67e8f9;
+      border: 1px solid rgba(6, 182, 212, 0.35);
+    }
+    .tag-bonedi {
+      background: var(--accent-amber-subtle);
+      color: #fcd34d;
+      border: 1px solid rgba(217, 119, 6, 0.35);
+    }
+    .tag-cross {
+      background: var(--accent-emerald-subtle);
+      color: #6ee7b7;
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+    .tag-district {
+      background: rgba(255, 255, 255, 0.06);
+      color: #cbd5e1;
+    }
+
+    .card-score-badge {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px solid rgba(245, 158, 11, 0.25);
+      padding: 3px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .card-score-badge span {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      line-height: 1.35;
+    }
+
+    .card-meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .meta-item svg {
+      flex-shrink: 0;
+      color: var(--text-muted);
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: #94a3b8;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-footer {
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.8rem;
+    }
+
+    .source-avatars {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+
+    .action-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-card-map {
+      color: #38bdf8;
+      text-decoration: none;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: color 0.15s;
+    }
+    .btn-card-map:hover {
+      color: #7dd3fc;
+      text-decoration: underline;
+    }
+
+    /* Skeleton Loading Cards */
+    .skeleton-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-lg);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+      background-size: 200% 100%;
+      animation: skeleton-pulse 1.5s infinite;
+      border-radius: 4px;
+    }
+    @keyframes skeleton-pulse {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Empty state */
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state-icon {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      color: var(--text-muted);
+      opacity: 0.5;
+    }
+
+    /* ==========================================================================
+       7. DETAIL MODAL & CRAWLER LOGS DRAWER
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      padding: 20px;
+    }
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      max-width: 680px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: var(--shadow-elevated);
+      position: relative;
+      padding: 32px;
+      animation: modal-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes modal-enter {
+      from { opacity: 0; transform: scale(0.96) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-secondary);
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .modal-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+
+    .modal-title {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+      line-height: 1.3;
+    }
+
+    .modal-badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+    .modal-section-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .modal-info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+    }
+    @media (max-width: 500px) {
+      .modal-info-grid { grid-template-columns: 1fr; }
+    }
+
+    .modal-info-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .modal-info-k {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+    }
+    .modal-info-v {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .sources-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+    }
+    .source-chip {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-hairline);
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-family: var(--font-mono);
+      color: #cbd5e1;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+      border-top: 1px solid var(--border-hairline);
+      padding-top: 20px;
+    }
+
+    /* Live Toast */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .toast {
+      background: var(--bg-surface-elevated);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 12px 18px;
+      box-shadow: var(--shadow-elevated);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.88rem;
+      animation: toast-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      max-width: 400px;
+    }
+    @keyframes toast-in {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- 1. Header Navigation -->
+    <header>
+      <div class="container nav-bar">
+        <a href="/" class="brand-mark">
+          <div class="brand-icon">
+            <svg width="20" height="20" fill="none" stroke="#ffffff" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="brand-text">
+            <h2>Pujo Atlas</h2>
+            <p>West Bengal Durga Puja Registry</p>
+          </div>
+        </a>
+
+        <div class="nav-actions">
+          <button id="crawlBtn" class="btn btn-primary" onclick="triggerCrawl()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Trigger Crawler
+          </button>
+          <a href="/docs" target="_blank" class="btn btn-secondary">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/></svg>
+            API Docs
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- 2. Hero Section -->
+      <section class="hero-section">
+        <div class="hero-tag">
+          <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2a10 10 0 100 20 10 10 0 000-20zM12 6v6l4 2"/></svg>
+          Autonomous Statewide Ingestion &bull; 24h Scheduler Active
+        </div>
+        <h1 class="hero-title">
+          Explore Durga Puja Across <span>All 17 Districts</span>
+        </h1>
+        <p class="hero-desc">
+          A multi-source data catalog cross-referencing Wikipedia, open geo-spatial catalogs, Reddit communities, and transit guides. Cataloging iconic high-budget themes, quiet residential neighborhood pujas, and centuries-old royal ancestral baris.
+        </p>
+      </section>
+
+      <!-- 3. Bento KPI Bar -->
+      <section class="metrics-bento">
+        <!-- Main Total Card -->
+        <div class="metric-card hero-kpi">
+          <div class="metric-header">
+            <span class="metric-label">Total Verified Pandals</span>
+            <div class="metric-icon-wrap" style="background: rgba(225, 29, 72, 0.2); color: #fda4af;">
+              <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="kpiTotal">-</div>
+          <div class="metric-subtext">Across 17 West Bengal districts & Kolkata zones</div>
+          <div class="bar-meter">
+            <div id="meterPopular" class="bar-meter-fill" style="width: 58%; background: var(--accent-crimson);" title="Popular"></div>
+            <div id="meterUnpopular" class="bar-meter-fill" style="width: 42%; background: var(--accent-cyan);" title="Unpopular"></div>
+          </div>
+        </div>
+
+        <!-- Popular Card -->
+        <div class="metric-card reg-kpi">
+          <div class="metric-header">
+            <span class="metric-label">Popular Themes</span>
+            <div class="metric-icon-wrap" style="background: var(--accent-crimson-subtle); color: #fda4af;">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z"/></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="kpiPopular" style="color: #fda4af;">-</div>
+          <div class="metric-subtext">Crowd-pullers & landmarks</div>
+        </div>
+
+        <!-- Unpopular Card -->
+        <div class="metric-card reg-kpi">
+          <div class="metric-header">
+            <span class="metric-label">Para / Quiet</span>
+            <div class="metric-icon-wrap" style="background: var(--accent-cyan-subtle); color: #67e8f9;">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="kpiUnpopular" style="color: #67e8f9;">-</div>
+          <div class="metric-subtext">Quiet community samitis</div>
+        </div>
+
+        <!-- Bonedi Card -->
+        <div class="metric-card reg-kpi">
+          <div class="metric-header">
+            <span class="metric-label">Bonedi Baris</span>
+            <div class="metric-icon-wrap" style="background: var(--accent-amber-subtle); color: #fcd34d;">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="kpiBonedi" style="color: #fcd34d;">-</div>
+          <div class="metric-subtext">Centuries-old royal estates</div>
+        </div>
+
+        <!-- Cross-referenced Card -->
+        <div class="metric-card reg-kpi">
+          <div class="metric-header">
+            <span class="metric-label">Cross-Verified</span>
+            <div class="metric-icon-wrap" style="background: var(--accent-emerald-subtle); color: #6ee7b7;">
+              <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+            </div>
+          </div>
+          <div class="metric-value" id="kpiCross" style="color: #6ee7b7;">-</div>
+          <div class="metric-subtext">&ge; 2 sources consensus</div>
+        </div>
+      </section>
+
+      <!-- 4. Unified Control Deck -->
+      <section class="control-deck">
+        <div class="search-filter-row">
+          <!-- Live Search Bar -->
+          <div class="search-wrapper">
+            <svg class="search-icon" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <input type="text" id="searchInput" class="search-input" placeholder="Search pandals by name, locality, transit hub, or keyword..." oninput="debounceSearch()">
+            <span class="search-shortcut">/</span>
+          </div>
+
+          <!-- District Selector -->
+          <div class="select-wrap">
+            <select id="districtSelect" class="custom-select" onchange="fetchPandals()">
+              <option value="">All Districts (Statewide)</option>
+              <option value="Kolkata">Kolkata</option>
+              <option value="Nadia">Nadia (Kalyani / Krishnanagar)</option>
+              <option value="Hooghly">Hooghly (Chandannagar / Guptipara)</option>
+              <option value="North 24 Parganas">North 24 Parganas (Barasat)</option>
+              <option value="South 24 Parganas">South 24 Parganas</option>
+              <option value="Paschim Bardhaman">Paschim Bardhaman (Durgapur/Asansol)</option>
+              <option value="Purba Bardhaman">Purba Bardhaman (Kalna)</option>
+              <option value="Darjeeling">Darjeeling / Siliguri</option>
+              <option value="Cooch Behar">Cooch Behar</option>
+              <option value="Bankura">Bankura (Bishnupur)</option>
+              <option value="Birbhum">Birbhum (Bolpur / Santiniketan)</option>
+              <option value="Murshidabad">Murshidabad (Hazarduari)</option>
+              <option value="Purba Medinipur">Purba Medinipur</option>
+              <option value="Paschim Medinipur">Paschim Medinipur</option>
+              <option value="Malda">Malda</option>
+              <option value="Purulia">Purulia</option>
+            </select>
+            <svg class="select-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+          </div>
+
+          <!-- Zone / Region Selector -->
+          <div class="select-wrap">
+            <select id="zoneSelect" class="custom-select" onchange="fetchPandals()">
+              <option value="">All Zones & Regions</option>
+              <option value="North">North Kolkata</option>
+              <option value="South">South Kolkata</option>
+              <option value="Central">Central Kolkata</option>
+              <option value="Salt Lake">East Kolkata & Salt Lake</option>
+              <option value="Behala">Behala</option>
+              <option value="North Bengal">North Bengal Region</option>
+              <option value="South Bengal">South Bengal Region</option>
+              <option value="Rarh Bengal">Rarh Bengal Region</option>
+              <option value="Howrah">Howrah</option>
+            </select>
+            <svg class="select-arrow" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+          </div>
+        </div>
+
+        <!-- Pill Filter Segments -->
+        <div class="filter-segment-row">
+          <div class="pill-tabs">
+            <button class="pill-btn active" data-filter="" onclick="setPopularityFilter('', this)">
+              All Pandals
+              <span class="pill-count" id="pillCountAll">-</span>
+            </button>
+            <button class="pill-btn" data-filter="popular" onclick="setPopularityFilter('popular', this)">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z"/></svg>
+              Popular Themes
+              <span class="pill-count" id="pillCountPop">-</span>
+            </button>
+            <button class="pill-btn" data-filter="unpopular" onclick="setPopularityFilter('unpopular', this)">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+              Quiet Para Samitis
+              <span class="pill-count" id="pillCountUnpop">-</span>
+            </button>
+            <button class="pill-btn" data-toggle="bonedi" onclick="toggleBonediFilter(this)">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg>
+              Bonedi Baris
+            </button>
+            <button class="pill-btn" data-toggle="cross" onclick="toggleCrossFilter(this)">
+              <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+              2+ Sources Corroborated
+            </button>
+          </div>
+
+          <div class="deck-stats">
+            <span id="renderedCountLabel">Showing 0 pandals</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. Pandals Cards Grid -->
+      <section id="pandalsGrid" class="pandals-grid">
+        <!-- Rendered by JS or Skeletons on initial load -->
+      </section>
+    </main>
+
+    <!-- 6. Detail Modal -->
+    <div id="detailModal" class="modal-overlay" onclick="closeModalOnOverlay(event)">
+      <div class="modal-card">
+        <button class="modal-close" onclick="closeModal()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+        <div id="modalBadges" class="modal-badge-row"></div>
+        <h2 id="modalTitle" class="modal-title">Pandal Title</h2>
+        <div class="modal-section">
+          <p id="modalDesc" style="color: var(--text-secondary); line-height: 1.6; font-size: 0.95rem;"></p>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Telemetry & Location</div>
+          <div id="modalInfoGrid" class="modal-info-grid"></div>
+        </div>
+        <div class="modal-section">
+          <div class="modal-section-title">Crawler Provenance & Corroboration</div>
+          <div id="modalSources" class="sources-chips"></div>
+        </div>
+        <div class="modal-actions">
+          <a id="modalMapBtn" href="#" target="_blank" class="btn btn-primary" style="display: none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Open in Google Maps
+          </a>
+          <button class="btn btn-secondary" onclick="copyPandalJson()">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+            Copy Pandal ID / API URL
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+  </div>
+
+  <script>
+    /* ==========================================================================
+       CLIENT LOGIC & DATA SYNCHRONIZATION
+       ========================================================================== */
+    let currentPopularity = "";
+    let isBonediOnly = false;
+    let isCrossOnly = false;
+    let searchTimeout = null;
+    let activeModalPandal = null;
+
+    // Toast Notification helper
+    function showToast(message, type = "info") {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      
+      const iconSvg = type === 'success' 
+        ? '<svg width="16" height="16" fill="none" stroke="#10b981" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>'
+        : '<svg width="16" height="16" fill="none" stroke="#38bdf8" stroke-width="2" viewBox="0 0 24 24"><path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>';
+      
+      toast.innerHTML = `${iconSvg} <span>${message}</span>`;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(8px)';
+        toast.style.transition = 'all 0.25s ease';
+        setTimeout(() => toast.remove(), 250);
+      }, 4000);
+    }
+
+    // Keyboard shortcut to search
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT') {
+        e.preventDefault();
+        const searchInput = document.getElementById('searchInput');
+        searchInput.focus();
+        searchInput.select();
+      }
+      if (e.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    async function loadStats() {
+      try {
+        const res = await fetch('/stats');
+        const data = await res.json();
+        
+        document.getElementById('kpiTotal').innerText = data.total_pandals;
+        document.getElementById('kpiPopular').innerText = data.popular_pandals;
+        document.getElementById('kpiUnpopular').innerText = data.unpopular_pandals;
+        document.getElementById('kpiBonedi').innerText = data.bonedi_pandals;
+        document.getElementById('kpiCross').innerText = data.cross_referenced_pandals || 0;
+
+        document.getElementById('pillCountAll').innerText = data.total_pandals;
+        document.getElementById('pillCountPop').innerText = data.popular_pandals;
+        document.getElementById('pillCountUnpop').innerText = data.unpopular_pandals;
+
+        // Ratio Meter
+        if (data.total_pandals > 0) {
+          const popPct = Math.round((data.popular_pandals / data.total_pandals) * 100);
+          const unpopPct = 100 - popPct;
+          document.getElementById('meterPopular').style.width = popPct + '%';
+          document.getElementById('meterUnpopular').style.width = unpopPct + '%';
+        }
+      } catch (e) {
+        console.error("Error loading stats:", e);
+      }
+    }
+
+    function renderSkeletons() {
+      const grid = document.getElementById('pandalsGrid');
+      grid.innerHTML = Array(6).fill(0).map(() => `
+        <div class="skeleton-card">
+          <div style="display: flex; gap: 8px;">
+            <div class="skeleton-box" style="width: 70px; height: 22px;"></div>
+            <div class="skeleton-box" style="width: 90px; height: 22px;"></div>
+          </div>
+          <div class="skeleton-box" style="width: 80%; height: 24px;"></div>
+          <div class="skeleton-box" style="width: 60%; height: 16px;"></div>
+          <div class="skeleton-box" style="width: 100%; height: 60px;"></div>
+          <div class="skeleton-box" style="width: 40%; height: 16px;"></div>
+        </div>
+      `).join('');
+    }
+
+    async function fetchPandals() {
+      renderSkeletons();
+
+      const search = document.getElementById('searchInput').value.trim();
+      const district = document.getElementById('districtSelect').value;
+      const zone = document.getElementById('zoneSelect').value;
+
+      const params = new URLSearchParams();
+      if (currentPopularity) params.append('popularity', currentPopularity);
+      if (district) params.append('district', district);
+      if (zone) params.append('zone', zone);
+      if (isBonediOnly) params.append('bonedi', 'true');
+      if (isCrossOnly) params.append('cross_referenced', 'true');
+      if (search) params.append('search', search);
+      params.append('limit', '300');
+
+      try {
+        const res = await fetch(`/pandals?${params.toString()}`);
+        const data = await res.json();
+        const grid = document.getElementById('pandalsGrid');
+
+        document.getElementById('renderedCountLabel').innerText = `Showing ${data.items ? data.items.length : 0} of ${data.total} pandals`;
+
+        if (!data.items || data.items.length === 0) {
+          grid.innerHTML = `
+            <div class="empty-state">
+              <svg class="empty-state-icon" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+              <h3 style="color: var(--text-primary); margin-bottom: 6px;">No pandals found</h3>
+              <p>Try clearing or broadening your search terms or district filters.</p>
+            </div>
+          `;
+          return;
+        }
+
+        window._cachedPandals = data.items;
+
+        grid.innerHTML = data.items.map((p, idx) => {
+          const isPop = p.popularity === 'popular';
+          const popTag = isPop
+            ? `<span class="tag tag-popular"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343a7.975 7.975 0 010 11.314z"/></svg> Popular</span>`
+            : `<span class="tag tag-unpopular"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg> Para Samiti</span>`;
+
+          const bonediTag = p.bonedi
+            ? `<span class="tag tag-bonedi"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16"/></svg> Bonedi</span>`
+            : '';
+
+          const crossTag = p.cross_referenced
+            ? `<span class="tag tag-cross"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg> Verified (${p.source_count})</span>`
+            : '';
+
+          const districtTag = `<span class="tag tag-district">${p.district || 'West Bengal'}</span>`;
+
+          let mapLink = '';
+          if (p.latitude && p.longitude) {
+            mapLink = `
+              <a href="https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}" target="_blank" class="btn-card-map" onclick="event.stopPropagation()">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Map
+              </a>
+            `;
+          }
+
+          const scoreVal = Math.round(p.popularity_score || 0);
+
+          return `
+            <div class="pandal-card" onclick="openPandalModal(${idx})">
+              <div>
+                <div class="card-top">
+                  <div class="card-tags">
+                    ${popTag}
+                    ${bonediTag}
+                    ${crossTag}
+                    ${districtTag}
+                  </div>
+                  <div class="card-score-badge" title="Popularity Score">
+                    ${scoreVal}<span>/100</span>
+                  </div>
+                </div>
+
+                <h3 class="card-title">${escapeHtml(p.name)}</h3>
+
+                <div class="card-meta-list">
+                  ${p.locality ? `
+                    <div class="meta-item">
+                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/></svg>
+                      <span>${escapeHtml(p.locality)}</span>
+                    </div>
+                  ` : ''}
+                  ${p.nearest_metro ? `
+                    <div class="meta-item">
+                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z"/><path d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10"/></svg>
+                      <span>${escapeHtml(p.nearest_metro)}</span>
+                    </div>
+                  ` : ''}
+                  ${p.year_established ? `
+                    <div class="meta-item">
+                      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                      <span>Founded ${escapeHtml(p.year_established)}</span>
+                    </div>
+                  ` : ''}
+                </div>
+
+                <p class="card-desc">${escapeHtml(p.description || 'Community Durga Puja pandal celebration in West Bengal.')}</p>
+              </div>
+
+              <div class="card-footer">
+                <div class="source-avatars">
+                  <span>${p.source_count || 1} citation${(p.source_count || 1) > 1 ? 's' : ''}</span>
+                </div>
+                <div class="action-links">
+                  ${mapLink}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error("Fetch error:", err);
+        document.getElementById('pandalsGrid').innerHTML = `
+          <div class="empty-state">
+            <h3 style="color: var(--accent-crimson);">Failed to load pandals</h3>
+            <p>${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    function setPopularityFilter(val, btn) {
+      currentPopularity = val;
+      document.querySelectorAll('.pill-tabs .pill-btn').forEach(b => {
+        if (!b.dataset.toggle) b.classList.remove('active');
+      });
+      btn.classList.add('active');
+      fetchPandals();
+    }
+
+    function toggleBonediFilter(btn) {
+      isBonediOnly = !isBonediOnly;
+      btn.classList.toggle('active', isBonediOnly);
+      fetchPandals();
+    }
+
+    function toggleCrossFilter(btn) {
+      isCrossOnly = !isCrossOnly;
+      btn.classList.toggle('active', isCrossOnly);
+      fetchPandals();
+    }
+
+    function debounceSearch() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(fetchPandals, 250);
+    }
+
+    // Modal Details Inspector
+    function openPandalModal(index) {
+      const p = window._cachedPandals[index];
+      if (!p) return;
+      activeModalPandal = p;
+
+      document.getElementById('modalTitle').innerText = p.name;
+      document.getElementById('modalDesc').innerText = p.description || 'Community Durga Puja celebration in West Bengal.';
+
+      // Badges
+      const isPop = p.popularity === 'popular';
+      let badgesHtml = isPop
+        ? `<span class="tag tag-popular">Popular Theme</span>`
+        : `<span class="tag tag-unpopular">Para Samiti</span>`;
+      if (p.bonedi) badgesHtml += `<span class="tag tag-bonedi">Bonedi Bari</span>`;
+      if (p.cross_referenced) badgesHtml += `<span class="tag tag-cross">Verified Consensus (${p.source_count} Sources)</span>`;
+      badgesHtml += `<span class="tag tag-district">${p.district || 'West Bengal'}</span>`;
+      document.getElementById('modalBadges').innerHTML = badgesHtml;
+
+      // Telemetry info grid
+      const grid = document.getElementById('modalInfoGrid');
+      grid.innerHTML = `
+        <div class="modal-info-item">
+          <span class="modal-info-k">Popularity Score</span>
+          <span class="modal-info-v" style="color: var(--accent-gold);">${Math.round(p.popularity_score)} / 100</span>
+        </div>
+        <div class="modal-info-item">
+          <span class="modal-info-k">Locality / Zone</span>
+          <span class="modal-info-v">${p.locality || 'N/A'} (${p.zone || 'General'})</span>
+        </div>
+        <div class="modal-info-item">
+          <span class="modal-info-k">Nearest Metro / Rail Confluence</span>
+          <span class="modal-info-v">${p.nearest_metro || 'Not within 1km of metro'}</span>
+        </div>
+        <div class="modal-info-item">
+          <span class="modal-info-k">Established Year</span>
+          <span class="modal-info-v">${p.year_established || 'Heritage Community Record'}</span>
+        </div>
+        <div class="modal-info-item">
+          <span class="modal-info-k">Coordinates</span>
+          <span class="modal-info-v" style="font-family: var(--font-mono); font-size: 0.8rem;">
+            ${p.latitude && p.longitude ? `${p.latitude.toFixed(4)}, ${p.longitude.toFixed(4)}` : 'Approximated by district center'}
+          </span>
+        </div>
+        <div class="modal-info-item">
+          <span class="modal-info-k">Canonical Slug</span>
+          <span class="modal-info-v" style="font-family: var(--font-mono); font-size: 0.78rem;">${p.slug}</span>
+        </div>
+      `;
+
+      // Sources
+      const sourcesWrap = document.getElementById('modalSources');
+      let sourcesList = [];
+      try {
+        sourcesList = typeof p.sources === 'string' ? JSON.parse(p.sources) : (p.sources || []);
+      } catch (e) {
+        sourcesList = [p.source || 'Standard Crawler'];
+      }
+      sourcesWrap.innerHTML = sourcesList.map(s => `<span class="source-chip">${escapeHtml(s)}</span>`).join('');
+
+      // Map action button
+      const mapBtn = document.getElementById('modalMapBtn');
+      if (p.latitude && p.longitude) {
+        mapBtn.href = `https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`;
+        mapBtn.style.display = 'inline-flex';
+      } else {
+        mapBtn.style.display = 'none';
+      }
+
+      document.getElementById('detailModal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('detailModal').classList.remove('active');
+    }
+    function closeModalOnOverlay(e) {
+      if (e.target.id === 'detailModal') closeModal();
+    }
+
+    function copyPandalJson() {
+      if (!activeModalPandal) return;
+      const url = `${window.location.origin}/pandals/${activeModalPandal.id}`;
+      navigator.clipboard.writeText(url).then(() => {
+        showToast("Copied API endpoint URL to clipboard!", "success");
+      });
+    }
+
+    async function triggerCrawl() {
+      const btn = document.getElementById('crawlBtn');
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg class="animate-spin" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M4 12a8 8 0 018-8v8H4z"/></svg>
+        Crawling Sources...
+      `;
+      showToast("Triggered statewide crawl job across Wikipedia, Reddit feeds & district catalogs...", "info");
+
+      try {
+        const res = await fetch('/crawl', { method: 'POST' });
+        const data = await res.json();
+        
+        setTimeout(async () => {
+          await loadStats();
+          await fetchPandals();
+          btn.disabled = false;
+          btn.innerHTML = `
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Trigger Crawler
+          `;
+          showToast("Crawl complete! Data refreshed and cross-referenced successfully.", "success");
+        }, 3200);
+
+      } catch (err) {
+        showToast("Crawl error: " + err.message, "error");
+        btn.disabled = false;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Bootstrap
+    loadStats();
+    fetchPandals();
+  </script>
+</body>
+</html>

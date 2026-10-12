@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-12T19:23:24.018Z",
+  "entries": [
+    "aas-compose-stack",
+    "aas-discover",
+    "anti-slop-design",
+    "api-rate-limit-handler",
+    "fastapi-pro",
+    "frontend-design",
+    "python-fastapi-development"
+  ]
+}
